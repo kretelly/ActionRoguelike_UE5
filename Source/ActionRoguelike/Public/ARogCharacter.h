@@ -19,6 +19,10 @@ public:
 	AARogCharacter();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = Ability)
+	TSubclassOf<AActor> ProjectileClass;
+
+protected:
 	
 	// Camera boom -> it posits the camera behind the character 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -31,7 +35,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Movement
 	void MoveForward(float Value);
+	void MoveRight(float Value);
+
+	// Actions
+	void PrimaryAttack();
 
 public:	
 	// Called every frame
