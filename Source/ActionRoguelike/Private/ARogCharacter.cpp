@@ -5,6 +5,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "ARogInteractionComponent.h"
+
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -19,6 +21,8 @@ AARogCharacter::AARogCharacter()
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	InteractionComp = CreateDefaultSubobject<UARogInteractionComponent>(TEXT("InteractionComp"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
@@ -70,6 +74,7 @@ void AARogCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 		// Actions
 		PlayerInputComponent->BindAction("PrimaryAttack", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryAttack);
+		PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryInteract);
 	}
 }
 
@@ -95,6 +100,15 @@ void AARogCharacter::MoveRight(float Value)
 // Primary Attack
 void AARogCharacter::PrimaryAttack()
 {
+	if (!GetWorldTimerManager().IsTimerActive(PrimaryAttackTimerHandle))
+	{
+		PlayAnimMontage(AttackAnim);
+		GetWorldTimerManager().SetTimer(PrimaryAttackTimerHandle, this, &AARogCharacter::PrimaryAttackTimeElapsed, 0.2f);
+	}
+}
+
+void AARogCharacter::PrimaryAttackTimeElapsed()
+{
 	// Hand Location to Spawn Projectile
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	// Tranform Spawn
@@ -107,7 +121,16 @@ void AARogCharacter::PrimaryAttack()
 	{
 		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 	}
+
+	GetWorldTimerManager().ClearTimer(PrimaryAttackTimerHandle);
 }
 
+void AARogCharacter::PrimaryInteract()
+{
+	if (InteractionComp)
+	{
+		InteractionComp->PrimaryInteract();
+	}
+}
 
 //GEngine->AddOnScreenDebugMessage(-1, 4.5f, FColor::Purple, "Event Fired");

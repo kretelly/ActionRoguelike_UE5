@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UARogInteractionComponent;
+class UAnimMontage;
 
 UCLASS()
 class ACTIONROGUELIKE_API AARogCharacter : public ACharacter
@@ -19,18 +21,26 @@ public:
 	AARogCharacter();
 
 protected:
+
 	UPROPERTY(EditAnywhere, Category = Ability)
 	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = Ability)
+	UAnimMontage* AttackAnim;
 
 protected:
 	
 	// Camera boom -> it posits the camera behind the character 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	USpringArmComponent* SpringArmComp;
 	
 	// Follow camera
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	UCameraComponent* CameraComp;
+
+	// Interaction using interface
+	UPROPERTY(VisibleAnywhere)
+	UARogInteractionComponent* InteractionComp;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -41,6 +51,11 @@ protected:
 
 	// Actions
 	void PrimaryAttack();
+	void PrimaryAttackTimeElapsed();
+	FTimerHandle PrimaryAttackTimerHandle;
+	
+	// Interaction with world using Interface
+	void PrimaryInteract();
 
 public:	
 	// Called every frame

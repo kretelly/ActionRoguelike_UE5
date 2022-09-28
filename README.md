@@ -29,3 +29,8 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [PlayerController](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Framework/Controller/PlayerController/)
 - [Controller](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Framework/Controller/)
 - [Collision Filtering](https://www.unrealengine.com/en-US/blog/collision-filtering)
+
+## Lecture 4
+- [C++ Interfaces](https://docs.unrealengine.com/5.0/en-US/interfaces-in-unreal-engine/)
+- [Gameplay Timers](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Timers/)
+- [Variables, Timers, and Events](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/CPPTutorials/VariablesTimersEvents/)
