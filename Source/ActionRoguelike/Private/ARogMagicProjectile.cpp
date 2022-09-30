@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AARogMagicProjectile::AARogMagicProjectile()
@@ -38,12 +39,34 @@ void AARogMagicProjectile::BeginPlay()
 
 	// Lifetime Span
 	SetLifeSpan(10.0f);
+
+	// Hit event
+	SphereComp->OnComponentHit.AddDynamic(this, &AARogMagicProjectile::OnComponentHit);
+	
+	//Ignores the intigator that spawned the projectile.
+	SphereComp->IgnoreActorWhenMoving(GetInstigator(),true);
 }
 
 // Called every frame
 void AARogMagicProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
+// Called on event OnComponentHit if it was hit by a AARogMagicProjectile actor
+void AARogMagicProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor != GetInstigator())
+	{
+		if (HitParticle)
+		{
+			FTransform SpawnTransform = FTransform(Hit.Location);
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, SpawnTransform);
+		}
+
+		//Add play sound here
+		GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire Sound");
+
+		Destroy();
+	}
+}

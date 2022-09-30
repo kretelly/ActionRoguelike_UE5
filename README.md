@@ -34,3 +34,9 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [C++ Interfaces](https://docs.unrealengine.com/5.0/en-US/interfaces-in-unreal-engine/)
 - [Gameplay Timers](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Timers/)
 - [Variables, Timers, and Events](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/CPPTutorials/VariablesTimersEvents/)
+
+## Lecture 4
+- [Intro to Blueprints (Epic Games, Video Playlist)](https://www.youtube.com/watch?v=EFXMW_UEDco)
+- [Blueprint Kickstart & Essentials (Epic Games, Video Playlist)](https://dev.epicgames.com/community/learning/courses/vW/unreal-engine-blueprint-kickstart/qjK/blueprint-intro-and-philosophy)
+- [Blueprint Best Practices (Docs)](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Blueprints/BestPractices/)
+- [Content Examples](https://docs.unrealengine.com/5.0/en-US/content-examples-sample-project-for-unreal-engine/)

@@ -116,6 +116,7 @@ void AARogCharacter::PrimaryAttackTimeElapsed()
 	// Spawn Params
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
 
 	if (ProjectileClass)
 	{

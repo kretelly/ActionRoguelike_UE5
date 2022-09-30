@@ -3,6 +3,7 @@
 
 #include "ARogItemChest.h"
 #include "Components/StaticMeshComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AARogItemChest::AARogItemChest()
@@ -16,25 +17,71 @@ AARogItemChest::AARogItemChest()
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>("LidMesh");
 	LidMesh->SetupAttachment(BaseMesh);
 
-	TargetPitch = 110.0f;
-}
+	TreasureMesh = CreateDefaultSubobject<UStaticMeshComponent>("TreasureMesh");
+	TreasureMesh->SetupAttachment(BaseMesh);
 
-void AARogItemChest::Interact_Implementation(APawn* InstigatorPawn)
-{
-	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0.0f, 0.0f));
+	ParticleSysComp = CreateDefaultSubobject<UParticleSystemComponent>("ParticleSysComp");
+	ParticleSysComp->SetupAttachment(BaseMesh);
+
+	TimelineComp = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineComp"));
 }
 
 // Called when the game starts or when spawned
 void AARogItemChest::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	ParticleSysComp->bAutoActivate = false;
+
+	// Timeline track
+	FOnTimelineFloat TimelineCurveTrack;
+	TimelineCurveTrack.BindDynamic(this, &AARogItemChest::ToggleChestLid);
+	if (AnimationCurveFloat) TimelineComp->AddInterpFloat(AnimationCurveFloat, TimelineCurveTrack);
+
+	// Timeline track end
+	FOnTimelineEventStatic TimelineCurveFinished;
+	TimelineCurveFinished.BindUFunction(this, FName("OnEventFinish"));
+	TimelineComp->SetTimelineFinishedFunc(TimelineCurveFinished);
+
+	// Make timeline stop at last frame
+	TimelineComp->SetTimelineLengthMode(ETimelineLengthMode::TL_LastKeyFrame);
 }
 
 // Called every frame
 void AARogItemChest::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void AARogItemChest::Interact_Implementation(APawn* InstigatorPawn)
+{
+	if (!TimelineComp->IsPlaying())
+	{
+		if (!bIsLidOpen)
+		{
+			TimelineComp->Play();
+			bIsLidOpen = true;
+		}	
+		else
+		{
+			TimelineComp->Reverse();
+			bIsLidOpen = false;
+		}
+	}
+}
+
+void AARogItemChest::ToggleChestLid(float Output)
+{
+	LidMesh->SetRelativeRotation(FRotator(Output, 0.0f, 0.0f));
+}
+
+void AARogItemChest::OnEventFinish()
+{
+	if (bIsLidOpen)
+	{
+		ParticleSysComp->Activate();
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Red, "Fire Sound");
 }
 

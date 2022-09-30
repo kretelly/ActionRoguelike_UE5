@@ -32,6 +32,10 @@ protected:
 	// Projectile Movement
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* Projectile;
+
+	// Spawned Particle on Hit Event
+	UPROPERTY(EditDefaultsOnly, Category=Effects)
+	UParticleSystem* HitParticle;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -39,5 +43,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 };
