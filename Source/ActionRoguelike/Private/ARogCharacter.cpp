@@ -6,6 +6,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "ARogInteractionComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "ARogAttributeComponent.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -18,11 +20,14 @@ AARogCharacter::AARogCharacter()
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComp->SetupAttachment(GetRootComponent());
 	SpringArmComp->bUsePawnControlRotation = true;
+	SpringArmComp->SocketOffset = FVector(0.0f, 90.0f, 0.0f);
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	InteractionComp = CreateDefaultSubobject<UARogInteractionComponent>(TEXT("InteractionComp"));
+
+	AttributeComp = CreateDefaultSubobject<UARogAttributeComponent>(TEXT("AttributeComp"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
@@ -40,7 +45,8 @@ void AARogCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	/** This is entirely optional, it draws two arrows to visualize rotations of the player */
+	/** This is entirely optional, it draws two arrows to visualize rotations of the player
+	
 	// -- Rotation Visualization -- //
 	const float DrawScale = 100.0f;
 	const float Thickness = 5.0f;
@@ -54,6 +60,8 @@ void AARogCharacter::Tick(float DeltaTime)
 	FVector ControllerDirection_LineEnd = LineStart + (GetControlRotation().Vector() * 100.0f);
 	// Draw 'Controller' Rotation ('PlayerController' that 'possessed' this character)
 	DrawDebugDirectionalArrow(GetWorld(), LineStart, ControllerDirection_LineEnd, DrawScale, FColor::Green, false, 0.0f, 0, Thickness);
+	
+	*/
 }
 
 // Called to bind functionality to input
@@ -75,6 +83,7 @@ void AARogCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		// Actions
 		PlayerInputComponent->BindAction("PrimaryAttack", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryAttack);
 		PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryInteract);
+		PlayerInputComponent->BindAction("PrimaryTeleport", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryTeleport);
 	}
 }
 
@@ -103,29 +112,13 @@ void AARogCharacter::PrimaryAttack()
 	if (!GetWorldTimerManager().IsTimerActive(PrimaryAttackTimerHandle))
 	{
 		PlayAnimMontage(AttackAnim);
-		GetWorldTimerManager().SetTimer(PrimaryAttackTimerHandle, this, &AARogCharacter::PrimaryAttackTimeElapsed, 0.2f);
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindUObject(this, &AARogCharacter::PrimaryAbilityTimeElapsed, MagicProjectileClass);
+		GetWorldTimerManager().SetTimer(PrimaryAttackTimerHandle, TimerDelegate, 0.2f, false);
 	}
 }
 
-void AARogCharacter::PrimaryAttackTimeElapsed()
-{
-	// Hand Location to Spawn Projectile
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	// Tranform Spawn
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation, FVector(1.0f));
-	// Spawn Params
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Instigator = this;
-
-	if (ProjectileClass)
-	{
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
-	}
-
-	GetWorldTimerManager().ClearTimer(PrimaryAttackTimerHandle);
-}
-
+// Primary Interact (Interfaces)
 void AARogCharacter::PrimaryInteract()
 {
 	if (InteractionComp)
@@ -134,4 +127,67 @@ void AARogCharacter::PrimaryInteract()
 	}
 }
 
+// Teleport
+void AARogCharacter::PrimaryTeleport()
+{
+	if (!GetWorldTimerManager().IsTimerActive(PrimaryTeleportTimerHandle))
+	{
+		PlayAnimMontage(AttackAnim);
+
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindUObject(this, &AARogCharacter::PrimaryAbilityTimeElapsed, TeleportProjectileClass);
+		GetWorldTimerManager().SetTimer(PrimaryTeleportTimerHandle, TimerDelegate, 0.2f, false);
+	}
+}
+
+void AARogCharacter::PrimaryAbilityTimeElapsed(TSubclassOf<AActor> Object)
+{
+	// Hand Location to Spawn Projectile
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+	// Target Location (using linetrace)
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
+
+	FVector StartLocation = CameraComp->GetComponentLocation();
+	FVector TargetLocation = StartLocation + (CameraComp->GetForwardVector() * 10000.0f);
+
+	FHitResult HitResult;
+	bool bIsBlockingLine = GetWorld()->LineTraceSingleByObjectType(HitResult, StartLocation, TargetLocation, ObjectQueryParams);
+
+	FRotator Rotation;
+	if (bIsBlockingLine)
+	{
+		Rotation = UKismetMathLibrary::FindLookAtRotation(HandLocation, HitResult.Location);
+	}
+	else
+	{
+		Rotation = UKismetMathLibrary::FindLookAtRotation(HandLocation, TargetLocation);
+	}
+
+	// Tranform Spawn
+	FTransform SpawnTM = FTransform(Rotation, HandLocation, FVector(1.0f));
+	//FTransform SpawnTM = UKismetMathLibrary::MakeTransform(HandLocation, Rotation, FVector(1.0f));
+
+	// Spawn Params
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+
+	if (Object)
+	{
+		GetWorld()->SpawnActor<AActor>(Object, SpawnTM, SpawnParams);
+	}
+
+	// Clear All Timers
+	GetWorldTimerManager().ClearTimer(PrimaryAttackTimerHandle);
+	GetWorldTimerManager().ClearTimer(PrimaryTeleportTimerHandle);
+}
+
+
+
 //GEngine->AddOnScreenDebugMessage(-1, 4.5f, FColor::Purple, "Event Fired");
+
+

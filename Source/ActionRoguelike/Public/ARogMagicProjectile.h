@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "ARogProjectileBase.h"
 #include "ARogMagicProjectile.generated.h"
 
 class USphereComponent;
@@ -11,7 +11,7 @@ class UParticleSystemComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AARogMagicProjectile : public AActor
+class ACTIONROGUELIKE_API AARogMagicProjectile : public AARogProjectileBase // Re-parented from AActor
 {
 	GENERATED_BODY()
 	
@@ -21,30 +21,15 @@ public:
 
 protected:
 	
-	// Base collision shape
-	UPROPERTY(VisibleAnywhere)
-	USphereComponent* SphereComp;
-
-	// Effects
-	UPROPERTY(VisibleAnywhere)
-	UParticleSystemComponent* ParticleSysComp;
-
-	// Projectile Movement
-	UPROPERTY(VisibleAnywhere)
-	UProjectileMovementComponent* Projectile;
-
-	// Spawned Particle on Hit Event
-	UPROPERTY(EditDefaultsOnly, Category=Effects)
-	UParticleSystem* HitParticle;
-	
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	//virtual void BeginPlay() override;
+
+	virtual void PostInitializeComponents() override;
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
+	void OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

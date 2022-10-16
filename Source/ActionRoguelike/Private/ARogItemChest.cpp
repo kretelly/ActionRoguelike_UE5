@@ -53,7 +53,7 @@ void AARogItemChest::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AARogItemChest::Interact_Implementation(APawn* InstigatorPawn)
+void AARogItemChest::Interact_Implementation(AActor* InstigatorPawn)
 {
 	if (!TimelineComp->IsPlaying())
 	{

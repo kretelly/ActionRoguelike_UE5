@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class UARogInteractionComponent;
+class UARogAttributeComponent;
 class UAnimMontage;
 
 UCLASS()
@@ -23,7 +24,10 @@ public:
 protected:
 
 	UPROPERTY(EditAnywhere, Category = Ability)
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> MagicProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = Ability)
+	TSubclassOf<AActor> TeleportProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = Ability)
 	UAnimMontage* AttackAnim;
@@ -39,8 +43,12 @@ protected:
 	UCameraComponent* CameraComp;
 
 	// Interaction using interface
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UARogInteractionComponent* InteractionComp;
+
+	// Attributes component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UARogAttributeComponent* AttributeComp;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,11 +59,17 @@ protected:
 
 	// Actions
 	void PrimaryAttack();
-	void PrimaryAttackTimeElapsed();
 	FTimerHandle PrimaryAttackTimerHandle;
 	
+	// Handle Spawn Class After a period of time
+	void PrimaryAbilityTimeElapsed(TSubclassOf<AActor> Object);
+
 	// Interaction with world using Interface
 	void PrimaryInteract();
+
+	// Teleport the actor using a projectile
+	void PrimaryTeleport();
+	FTimerHandle PrimaryTeleportTimerHandle;
 
 public:	
 	// Called every frame

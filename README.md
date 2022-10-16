@@ -35,8 +35,20 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Gameplay Timers](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Timers/)
 - [Variables, Timers, and Events](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/CPPTutorials/VariablesTimersEvents/)
 
-## Lecture 4
+## Lecture 5
 - [Intro to Blueprints (Epic Games, Video Playlist)](https://www.youtube.com/watch?v=EFXMW_UEDco)
 - [Blueprint Kickstart & Essentials (Epic Games, Video Playlist)](https://dev.epicgames.com/community/learning/courses/vW/unreal-engine-blueprint-kickstart/qjK/blueprint-intro-and-philosophy)
 - [Blueprint Best Practices (Docs)](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Blueprints/BestPractices/)
 - [Content Examples](https://docs.unrealengine.com/5.0/en-US/content-examples-sample-project-for-unreal-engine/)
+
+## Lecture 6
+- [Hot Reload and Live Coding](https://unrealcommunity.wiki/live-compiling-in-unreal-projects-tp14jcgs)
+- [Logs, Printing Messages To Yourself During Runtime](https://nerivec.github.io/old-ue4-wiki/pages/logs-printing-messages-to-yourself-during-runtime.html)
+- [Asserts for Debugging](https://docs.unrealengine.com/5.0/en-US/asserts-in-unreal-engine/)
+
+## Lecture 7
+- [String Handling](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/)
+- [FText](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/FText/)
+- [TimerDelegate with Const& Parameters fails to compile](https://forums.unrealengine.com/t/timerdelegate-with-const-parameters-fails-to-compile/398185)
+- [FTimerDelegate](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Engine/FTimerDelegate/)
+- [Event Dispatchers / Delegates Quick Start Guide](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ActorCommunication/EventDispatcherQuickStart/)
