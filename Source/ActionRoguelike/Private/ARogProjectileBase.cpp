@@ -63,14 +63,17 @@ void AARogProjectileBase::OnComponentHit(UPrimitiveComponent* HitComponent, AAct
 
 void AARogProjectileBase::Explode_Implementation()
 {
-	// Play FVX
-	UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation(), GetActorRotation());
+	if (!IsPendingKill())
+	{
+		// Play FVX
+		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation(), GetActorRotation());
 
-	// Play sound
-	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire Sound");
+		// Play sound
+		GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire Sound");
 
-	// Play camera shake
-	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire CameraShake");
+		// Play camera shake
+		GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire CameraShake");
 
-	Destroy();
+		Destroy();
+	}
 }

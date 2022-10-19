@@ -12,12 +12,14 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Tom's Unreal Resource Link Collection](https://www.tomlooman.com/unreal-engine-resources/)
 - [Tom's YouTube Channel](https://www.youtube.com/c/TomLooman1)
 - [Unreal Engine 5 Documentation](https://docs.unrealengine.com/5.0/en-US/)
+- [Unreal Engine Docs: Site Map](https://docs.unrealengine.com/4.27/en-US/SiteIndex/)
 - [Unreal Engine Forums](https://forums.unrealengine.com/)
 - [Community Wiki](https://unrealcommunity.wiki/)
 - [Discord Community: Unreal Slackers](https://unrealslackers.org/)
 
 ## Lecture 2
 - [Project Style Guide](https://github.com/Allar/ue5-style-guide)
+- [Designer's guide to Unreal Engine keyboard shortcuts](https://www.unrealengine.com/en-US/tech-blog/designer-s-guide-to-unreal-engine-keyboard-shortcuts)
 - [Epic’s Code Standards](https://docs.unrealengine.com/5.0/en-US/epic-cplusplus-coding-standard-for-unreal-engine/)
 - [Gameplay Framework Classes](https://www.tomlooman.com/unreal-engine-gameplay-framework/)
 - [Unreal Property System (Reflection)](https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection)
@@ -52,3 +54,19 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [TimerDelegate with Const& Parameters fails to compile](https://forums.unrealengine.com/t/timerdelegate-with-const-parameters-fails-to-compile/398185)
 - [FTimerDelegate](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Engine/FTimerDelegate/)
 - [Event Dispatchers / Delegates Quick Start Guide](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ActorCommunication/EventDispatcherQuickStart/)
+
+## Lecture 8
+- [Material Editor Fundamentals for Game Development](https://dev.epicgames.com/community/learning/courses/pm/unreal-engine-material-editor-fundamentals-for-game-development/V1X/introduction-to-the-course)
+- [Physically Based Materials](https://docs.unrealengine.com/5.0/en-US/physically-based-materials-in-unreal-engine/)
+- [Material Inputs](https://docs.unrealengine.com/5.0/en-US/material-inputs-in-unreal-engine/)
+- [Intro To Materials (10 Video Playlist)](https://www.youtube.com/watch?v=lngF4VVNER4&list=PLZlv_N0_O1gbQjgY0nDwZNYe_N8IcYWS-)
+- [Gradient Material Functions](https://docs.unrealengine.com/5.0/en-US/gradient-material-functions-in-unreal-engine/)
+- [Gradient](https://docs.unrealengine.com/4.27/en-US/RenderingAndGraphics/Materials/Functions/Reference/Gradient/)
+
+## Lecture 9
+- [Audio System Overview](https://docs.unrealengine.com/4.27/en-US/WorkingWithAudio/Overview/)
+- [Sound Classes](https://docs.unrealengine.com/4.27/en-US/WorkingWithAudio/SoundClasses/)
+- [Sound Cue Reference](https://docs.unrealengine.com/5.0/en-US/sound-cue-reference-for-unreal-engine/)
+- [Sound Cue Editor](https://docs.unrealengine.com/4.26/en-US/WorkingWithMedia/Audio/SoundCues/Editor/)
+- [Widget Blueprints](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/UMG/UserGuide/WidgetBlueprints/)
+- [Animation Blueprints](https://docs.unrealengine.com/5.0/en-US/animation-blueprints-in-unreal-engine/)

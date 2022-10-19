@@ -10,11 +10,17 @@ UARogAttributeComponent::UARogAttributeComponent()
 	HealthMax = 100.0f;
 }
 
+bool UARogAttributeComponent::IsAlive() const
+{
+	return Health > 0.0f;
+}
+
 bool UARogAttributeComponent::ApplyHealthChange(float Delta)
 {
 	Health += Delta;
 
 	HealthChangeDelegate.Broadcast(nullptr, this, Health, Delta);
+	ParamChangeDelegate.Broadcast(nullptr, this, Health, Delta);
 
 	return Health > 0;
 }

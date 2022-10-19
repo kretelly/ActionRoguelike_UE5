@@ -33,11 +33,16 @@ AARogCharacter::AARogCharacter()
 	bUseControllerRotationYaw = false;
 }
 
+void AARogCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	AttributeComp->HealthChangeDelegate.AddDynamic(this, &AARogCharacter::OnHealthChange);
+}
+
 // Called when the game starts or when spawned
 void AARogCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -83,7 +88,8 @@ void AARogCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		// Actions
 		PlayerInputComponent->BindAction("PrimaryAttack", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryAttack);
 		PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryInteract);
-		PlayerInputComponent->BindAction("PrimaryTeleport", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryTeleport);
+		PlayerInputComponent->BindAction("Teleport", EInputEvent::IE_Pressed, this, &AARogCharacter::TeleportAbility);
+		PlayerInputComponent->BindAction("SecundaryAttack", EInputEvent::IE_Pressed, this, &AARogCharacter::SecundaryAttack);
 	}
 }
 
@@ -128,15 +134,28 @@ void AARogCharacter::PrimaryInteract()
 }
 
 // Teleport
-void AARogCharacter::PrimaryTeleport()
+void AARogCharacter::TeleportAbility()
 {
-	if (!GetWorldTimerManager().IsTimerActive(PrimaryTeleportTimerHandle))
+	if (!GetWorldTimerManager().IsTimerActive(TeleportTimerHandle))
 	{
 		PlayAnimMontage(AttackAnim);
 
 		FTimerDelegate TimerDelegate;
 		TimerDelegate.BindUObject(this, &AARogCharacter::PrimaryAbilityTimeElapsed, TeleportProjectileClass);
-		GetWorldTimerManager().SetTimer(PrimaryTeleportTimerHandle, TimerDelegate, 0.2f, false);
+		GetWorldTimerManager().SetTimer(TeleportTimerHandle, TimerDelegate, 0.2f, false);
+	}
+}
+
+// Secundary Attack
+void AARogCharacter::SecundaryAttack()
+{
+	if (!GetWorldTimerManager().IsTimerActive(SecundaryAttackTimerHandle))
+	{
+		PlayAnimMontage(AttackAnim);
+
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindUObject(this, &AARogCharacter::PrimaryAbilityTimeElapsed, BlackHoleProjectileClass);
+		GetWorldTimerManager().SetTimer(SecundaryAttackTimerHandle, TimerDelegate, 0.2f, false);
 	}
 }
 
@@ -183,10 +202,17 @@ void AARogCharacter::PrimaryAbilityTimeElapsed(TSubclassOf<AActor> Object)
 
 	// Clear All Timers
 	GetWorldTimerManager().ClearTimer(PrimaryAttackTimerHandle);
-	GetWorldTimerManager().ClearTimer(PrimaryTeleportTimerHandle);
+	GetWorldTimerManager().ClearTimer(TeleportTimerHandle);
 }
 
-
+void AARogCharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta)
+{
+	if (NewHealth <= 0 && Delta < 0.0f)
+	{
+		APlayerController* PC = Cast<APlayerController>(GetController());
+		DisableInput(PC);
+	}
+}
 
 //GEngine->AddOnScreenDebugMessage(-1, 4.5f, FColor::Purple, "Event Fired");
 

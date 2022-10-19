@@ -15,18 +15,24 @@ class ACTIONROGUELIKE_API AARogTeleportProjectile : public AARogProjectileBase
 	GENERATED_BODY()
 
 protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	float TeleportDelay;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Teleport")
+	float DetonateDelay;
+
+	// Handle to cancel timer if we already hit something
+	FTimerHandle DetonationDelayTimerHandle;
+
+	// Base class using BlueprintNativeEvent, we must override the _Implementation not the Explode()
+	virtual void Explode_Implementation() override;
+
+	void TeleportInstigator();
+
 	virtual void BeginPlay() override;
 
-	virtual void PostInitializeComponents() override;
-
-	// Handle the Teleport Time
-	FTimerHandle TeleportTimerHandle;
-
-	// Teleport Instigator
-	void Teleport();
-
-	void PlayEffects();
-
 public:
-	void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	AARogTeleportProjectile();
+
 };

@@ -25,7 +25,7 @@ void AARogMagicProjectile::PostInitializeComponents()
 
 void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor != GetInstigator())
+	if (OtherActor && OtherActor != GetInstigator())
 	{
 		// Get and check if the overlaped actor has AttributeComp
 		UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(OtherActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));

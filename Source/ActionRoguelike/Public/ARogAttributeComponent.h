@@ -30,7 +30,14 @@ public:
 	FOnHealthChange HealthChangeDelegate;
 
 	UFUNCTION(BlueprintCallable)
+	bool IsAlive() const; // Add the const make the BlueprintCallable pure function.
+
+	UFUNCTION(BlueprintCallable)
 	bool ApplyHealthChange(float Delta);
+
+	// Dummy Actor -> used to change scalar parameters using event dispatcher
+	FOnHealthChange ParamChangeDelegate;
+
 
 //protected:
 	// Called when the game starts

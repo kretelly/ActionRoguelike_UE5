@@ -30,6 +30,9 @@ protected:
 	TSubclassOf<AActor> TeleportProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = Ability)
+	TSubclassOf<AActor> BlackHoleProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = Ability)
 	UAnimMontage* AttackAnim;
 
 protected:
@@ -53,6 +56,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Called between Constructor and Begin Play (Called after Contructor and before Begin Play)
+	virtual void PostInitializeComponents() override;
+
 	// Movement
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -68,8 +74,15 @@ protected:
 	void PrimaryInteract();
 
 	// Teleport the actor using a projectile
-	void PrimaryTeleport();
-	FTimerHandle PrimaryTeleportTimerHandle;
+	void TeleportAbility();
+	FTimerHandle TeleportTimerHandle;
+	
+	// Secundary Attack
+	void SecundaryAttack();
+	FTimerHandle SecundaryAttackTimerHandle;
+
+	UFUNCTION()
+	void OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta);
 
 public:	
 	// Called every frame

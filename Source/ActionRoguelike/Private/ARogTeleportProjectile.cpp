@@ -4,45 +4,46 @@
 #include "ARogTeleportProjectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+
+AARogTeleportProjectile::AARogTeleportProjectile()
+{
+	TeleportDelay = 0.2f;
+	DetonateDelay = 0.2f;
+	Projectile->InitialSpeed = 6000.f;
+}
 
 void AARogTeleportProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->GetTimerManager().SetTimer(TeleportTimerHandle, this, &AARogTeleportProjectile::Teleport, 0.3f, false);
-	SetLifeSpan(1.0f);
+	GetWorldTimerManager().SetTimer(DetonationDelayTimerHandle, this, &AARogTeleportProjectile::Explode, DetonateDelay);
 }
 
-void AARogTeleportProjectile::PostInitializeComponents()
+void AARogTeleportProjectile::Explode_Implementation()
 {
-	Super::PostInitializeComponents();
-	Projectile->InitialSpeed = 7000000.0f;
-}
+	// Clear timer if the Explode was already called through another source like OnActorHit
+	GetWorldTimerManager().ClearTimer(DetonationDelayTimerHandle);
 
-void AARogTeleportProjectile::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	GetWorld()->GetTimerManager().ClearTimer(TeleportTimerHandle);
-	
-	Projectile->StopMovementImmediately();
-	
-	PlayEffects();
-}
-
-void AARogTeleportProjectile::Teleport()
-{
-	Projectile->StopMovementImmediately();
-
-	PlayEffects();
-
-	GetInstigator()->TeleportTo(GetActorLocation(), GetInstigator()->GetActorRotation());
-}
-
-void AARogTeleportProjectile::PlayEffects()
-{
 	UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation(), GetActorRotation());
-	// Play sound
-	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire Sound");
-	// Play camera shake
-	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire CameraShake");
-	// Destroy itself
-	Destroy();
+
+	ParticleSysComp->DeactivateSystem();
+
+	Projectile->StopMovementImmediately();
+	SetActorEnableCollision(false);
+
+	FTimerHandle TeleportDelayTimerHandle;
+	GetWorldTimerManager().SetTimer(TeleportDelayTimerHandle, this, &AARogTeleportProjectile::TeleportInstigator, TeleportDelay);
+
+	// Skip base implementation as it will destroy actor
+	//Super::Explode_Implementation();
+}
+
+void AARogTeleportProjectile::TeleportInstigator()
+{
+	AActor* ActorToTeleport = GetInstigator();
+	if (ensure(ActorToTeleport))
+	{
+		// Keep instigator rotation or it may end up jarring
+		ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false);
+	}
 }
