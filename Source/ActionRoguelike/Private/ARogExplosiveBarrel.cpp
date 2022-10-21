@@ -4,7 +4,9 @@
 #include "ARogExplosiveBarrel.h"
 #include "Components/StaticMeshComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "ARogMagicProjectile.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 AARogExplosiveBarrel::AARogExplosiveBarrel()
@@ -32,14 +34,12 @@ void AARogExplosiveBarrel::BeginPlay()
 
 	// Hit event
 	StaticMeshComp->OnComponentHit.AddDynamic(this, &AARogExplosiveBarrel::OnComponentHit);
-
 }
 
 // Called every frame
 void AARogExplosiveBarrel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called on event OnComponentHit if it was hit by a AARogMagicProjectile actor
@@ -49,6 +49,10 @@ void AARogExplosiveBarrel::OnComponentHit(UPrimitiveComponent* HitComponent, AAc
 
 	if (Projectile)
 	{
+		// Impulse
 		RadialForceComp->FireImpulse();
+
+		// Impact Sound
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactSound, GetActorLocation());
 	}
 }

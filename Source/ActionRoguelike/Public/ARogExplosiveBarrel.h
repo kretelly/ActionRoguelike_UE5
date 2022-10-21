@@ -8,6 +8,7 @@
 
 class UStaticMeshComponent;
 class URadialForceComponent;
+class USoundCue;
 
 UCLASS()
 class ACTIONROGUELIKE_API AARogExplosiveBarrel : public AActor
@@ -27,6 +28,9 @@ protected:
 	// Base Impulse Force
 	UPROPERTY(VisibleAnywhere)
 	URadialForceComponent* RadialForceComp;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundCue* ImpactSound;
 
 protected:
 	// Called when the game starts or when spawned

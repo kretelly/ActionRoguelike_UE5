@@ -70,3 +70,16 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Sound Cue Editor](https://docs.unrealengine.com/4.26/en-US/WorkingWithMedia/Audio/SoundCues/Editor/)
 - [Widget Blueprints](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/UMG/UserGuide/WidgetBlueprints/)
 - [Animation Blueprints](https://docs.unrealengine.com/5.0/en-US/animation-blueprints-in-unreal-engine/)
+
+## Lecture 10
+- [Camera Shakes](https://docs.unrealengine.com/4.27/en-US/AnimatingObjects/Sequencer/Cameras/CameraShakes/)
+- [Navmesh Content Examples](https://docs.unrealengine.com/4.27/en-US/Resources/ContentExamples/NavMesh/)
+- [Modifying the Navigation Mesh](https://docs.unrealengine.com/5.0/en-US/overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine/)
+- [Behavior Tree Overview](https://docs.unrealengine.com/5.0/en-US/behavior-tree-in-unreal-engine---overview/)
+- [Blackboard](https://docs.unrealengine.com/5.0/en-US/BlueprintAPI/AI/Components/Blackboard/)
+- [Environment Query System Overview](https://docs.unrealengine.com/5.0/en-US/environment-query-system-overview-in-unreal-engine/)
+- [Pawn Sensing](https://docs.unrealengine.com/5.0/en-US/BlueprintAPI/AI/Components/PawnSensing/)
+- [AI Perception](https://docs.unrealengine.com/5.0/en-US/ai-perception-in-unreal-engine/)
+- [Artificial Intelligence](https://docs.unrealengine.com/5.0/en-US/artificial-intelligence-in-unreal-engine/)
+- [Gameplay Debugger](https://docs.unrealengine.com/5.0/en-US/using-the-gameplay-debugger-in-unreal-engine/)
+

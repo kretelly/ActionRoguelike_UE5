@@ -6,6 +6,10 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/AudioComponent.h"
+#include "Camera/CameraShakeBase.h"
+#include "Sound/SoundCue.h"
+
 
 // Sets default values
 AARogProjectileBase::AARogProjectileBase()
@@ -30,6 +34,14 @@ AARogProjectileBase::AARogProjectileBase()
 	Projectile->bRotationFollowsVelocity = true;
 	Projectile->bInitialVelocityInLocalSpace = true;
 	Projectile->ProjectileGravityScale = 0.0f;
+
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("AudioComp");
+	AudioComp->SetupAttachment(SphereComp);
+	//AudioComp->bAutoActivate = true;
+
+	// Camera Shake
+	ImpactShakeInnerRadius = 0.0f;
+	ImpactShakeOuterRadius = 1500.0f;
 }
 
 // Called when the game starts or when spawned
@@ -69,11 +81,11 @@ void AARogProjectileBase::Explode_Implementation()
 		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation(), GetActorRotation());
 
 		// Play sound
-		GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire Sound");
-
+		UGameplayStatics::SpawnSoundAtLocation(this, ImpactSound, GetActorLocation());
+		
 		// Play camera shake
-		GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Blue, "Fire CameraShake");
-
+		UGameplayStatics::PlayWorldCameraShake(this, SimpleCameraShake, GetActorLocation(), ImpactShakeInnerRadius, ImpactShakeOuterRadius);
+		
 		Destroy();
 	}
 }

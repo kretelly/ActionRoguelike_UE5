@@ -23,16 +23,16 @@ public:
 
 protected:
 
-	UPROPERTY(EditAnywhere, Category = Ability)
+	UPROPERTY(EditDefaultsOnly, Category = Ability)
 	TSubclassOf<AActor> MagicProjectileClass;
 
-	UPROPERTY(EditAnywhere, Category = Ability)
+	UPROPERTY(EditDefaultsOnly, Category = Ability)
 	TSubclassOf<AActor> TeleportProjectileClass;
 
-	UPROPERTY(EditAnywhere, Category = Ability)
+	UPROPERTY(EditDefaultsOnly, Category = Ability)
 	TSubclassOf<AActor> BlackHoleProjectileClass;
 
-	UPROPERTY(EditAnywhere, Category = Ability)
+	UPROPERTY(EditDefaultsOnly, Category = Ability)
 	UAnimMontage* AttackAnim;
 
 protected:
