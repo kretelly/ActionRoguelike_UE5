@@ -27,14 +27,11 @@ void UARogBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp
 					float DistanceTo = FVector::Distance(TargetActor->GetActorLocation(), AIPawn->GetActorLocation());
 
 					// Check if the distance is ok to shot
-					bool bWithinRange = DistanceTo < 1500.0f;
+					bool bWithinRange = DistanceTo < 2000.0f;
 					
 					// Check if has line of sight to shot
 					bool bHasLOS = false;
-					if (bWithinRange)
-					{
-						bHasLOS = AIController->LineOfSightTo(TargetActor);
-					}
+					if (bWithinRange) bHasLOS = AIController->LineOfSightTo(TargetActor);
 
 					BlackboardComp->SetValueAsBool(AttackRangeKey.SelectedKeyName, (bWithinRange && bHasLOS));
 				}

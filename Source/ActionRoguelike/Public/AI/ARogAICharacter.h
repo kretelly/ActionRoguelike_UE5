@@ -6,21 +6,25 @@
 #include "GameFramework/Character.h"
 #include "ARogAICharacter.generated.h"
 
+class UPawnSensingComponent;
+
 UCLASS()
 class ACTIONROGUELIKE_API AARogAICharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AARogAICharacter();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void PostInitializeComponents() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = Components)
+	UPawnSensingComponent* PawnSensingComp;
+
+	// It handles the delegate FSeePawnDelegate when it was trigged
+	UFUNCTION()
+	void OnPawnSeen(APawn* Pawn);
 
 };

@@ -77,9 +77,13 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Modifying the Navigation Mesh](https://docs.unrealengine.com/5.0/en-US/overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine/)
 - [Behavior Tree Overview](https://docs.unrealengine.com/5.0/en-US/behavior-tree-in-unreal-engine---overview/)
 - [Blackboard](https://docs.unrealengine.com/5.0/en-US/BlueprintAPI/AI/Components/Blackboard/)
-- [Environment Query System Overview](https://docs.unrealengine.com/5.0/en-US/environment-query-system-overview-in-unreal-engine/)
-- [Pawn Sensing](https://docs.unrealengine.com/5.0/en-US/BlueprintAPI/AI/Components/PawnSensing/)
-- [AI Perception](https://docs.unrealengine.com/5.0/en-US/ai-perception-in-unreal-engine/)
 - [Artificial Intelligence](https://docs.unrealengine.com/5.0/en-US/artificial-intelligence-in-unreal-engine/)
 - [Gameplay Debugger](https://docs.unrealengine.com/5.0/en-US/using-the-gameplay-debugger-in-unreal-engine/)
 
+## Lecture 11
+- [Visual Logger](https://docs.unrealengine.com/5.0/en-US/BlueprintAPI/Debug/VisualLogger/)
+- [Environment Query System Overview](https://docs.unrealengine.com/5.0/en-US/environment-query-system-overview-in-unreal-engine/)
+- [Pawn Sensing](https://docs.unrealengine.com/5.0/en-US/BlueprintAPI/AI/Components/PawnSensing/)
+- [AI Perception](https://docs.unrealengine.com/5.0/en-US/ai-perception-in-unreal-engine/)
+- [Simulate numpad for AI Debugging = Project Settings -> Gameplay Debugger -> Input](https://www.reddit.com/r/unrealengine/comments/ix5xy6/how_to_simulate_numpad_for_ai_debugging/)
+- [ensureMsgf](https://docs.unrealengine.com/5.0/en-US/API/Plugins/NeuralNetworkInference/ensureMsgf/)

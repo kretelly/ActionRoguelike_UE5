@@ -12,6 +12,7 @@
 AARogMagicProjectile::AARogMagicProjectile()
 {
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AARogMagicProjectile::OnActorBeginOverlap);
+	DamageAmount = -20.0f;
 }
 
 void AARogMagicProjectile::PostInitializeComponents()
@@ -31,7 +32,7 @@ void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedCo
 		UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(OtherActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));
 		if (AttributeComp)
 		{
-			AttributeComp->ApplyHealthChange(-20.0f);
+			AttributeComp->ApplyHealthChange(DamageAmount);
 			Explode();
 		}
 	}
