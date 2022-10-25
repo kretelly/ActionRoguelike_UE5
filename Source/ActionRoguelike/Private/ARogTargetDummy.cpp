@@ -36,6 +36,8 @@ void AARogTargetDummy::OnParamChange(AActor* InstigatorActor, UARogAttributeComp
 
 	if (bCanPlayHitFlash)
 	{
+		if (NewHealth <= 0) Destroy();
+
 		MeshComp->SetScalarParameterValueOnMaterials("HitFlashTime", GetWorld()->TimeSeconds);
 	}
 }

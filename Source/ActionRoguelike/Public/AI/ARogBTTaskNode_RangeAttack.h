@@ -16,9 +16,16 @@ class ACTIONROGUELIKE_API UARogBTTaskNode_RangeAttack : public UBTTaskNode
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
+public:
+	UARogBTTaskNode_RangeAttack();
+
 protected:
+	UPROPERTY(EditAnywhere, Category = AI)
+	float MaxBulletSpread;
 
 	UPROPERTY(EditAnywhere, Category = AI)
 	TSubclassOf<AActor> MagicProjectileClass;
+
+
 	
 };

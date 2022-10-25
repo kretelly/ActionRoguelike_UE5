@@ -4,8 +4,14 @@
 #include "AI/ARogBTTaskNode_RangeAttack.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
+#include "ARogAttributeComponent.h"
 #include "AIController.h"
 
+
+UARogBTTaskNode_RangeAttack::UARogBTTaskNode_RangeAttack()
+{
+	MaxBulletSpread = 3.0f;
+}
 
 EBTNodeResult::Type UARogBTTaskNode_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -25,15 +31,20 @@ EBTNodeResult::Type UARogBTTaskNode_RangeAttack::ExecuteTask(UBehaviorTreeCompon
 			return EBTNodeResult::Failed;
 		}
 
+		if(!UARogAttributeComponent::IsActorAlive(TargetActor))
+		{ 
+			return EBTNodeResult::Failed;
+		}
+
 		// Socket location to spawn Magic Projectile shot
 		FVector MuzzleLocation = AIPawn->GetMesh()->GetSocketLocation("Muzzle_01");
-		
+
 		FVector Direction = TargetActor->GetActorLocation() - MuzzleLocation;
 		FRotator MuzzleRotation = Direction.Rotation();
-
-		// Ignore negative pitch to not hit the floor in front itself
-		//MuzzleRotation.Pitch += FMath::RandRange(0.0f, MaxBulletSpread);
-		//MuzzleRotation.Yaw += FMath::RandRange(-MaxBulletSpread, MaxBulletSpread);
+		
+		// Rand Pitch and Yaw to make the game more fun
+		MuzzleRotation.Pitch += FMath::RandRange(0.0f, MaxBulletSpread); // it ignores negative pitch to not hit the floor in front itself
+		MuzzleRotation.Yaw += FMath::RandRange(-MaxBulletSpread, MaxBulletSpread);
 
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;

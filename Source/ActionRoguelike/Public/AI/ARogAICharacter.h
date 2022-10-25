@@ -24,11 +24,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Components)
 	UPawnSensingComponent* PawnSensingComp;
 
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UARogAttributeComponent* AttributeComp;
+
 	// It handles the delegate FSeePawnDelegate when it was trigged
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UARogAttributeComponent* AttributeComp;
+	UFUNCTION()
+	void OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta);
+
+	void SetTargetActor(AActor* NewTarget);
 
 };

@@ -29,10 +29,14 @@ void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedCo
 	if (OtherActor && OtherActor != GetInstigator())
 	{
 		// Get and check if the overlaped actor has AttributeComp
-		UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(OtherActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));
-		if (AttributeComp)
+		
+		//UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(OtherActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));
+		//UARogAttributeComponent* AttributeComp = OtherActor->FindComponentByClass<UARogAttributeComponent>();
+		UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(OtherActor);
+	
+		if (AttributeComp && UARogAttributeComponent::IsActorAlive(OtherActor))
 		{
-			AttributeComp->ApplyHealthChange(DamageAmount);
+			AttributeComp->ApplyHealthChange(GetInstigator(), DamageAmount);
 			Explode();
 		}
 	}

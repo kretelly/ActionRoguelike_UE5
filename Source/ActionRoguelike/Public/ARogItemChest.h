@@ -49,16 +49,12 @@ protected:
 	UCurveFloat* AnimationCurveFloat;
 
 	UFUNCTION()
-	void ToggleChestLid(float Output); // Update the lid location
+	void ToggleChestLid(float Output); // Update the lid location each frame
 
 	UFUNCTION()
-	void OnEventFinish(); // called after the timeline all frames
+	void OnEventFinish(); // called after the timeline is complete
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };

@@ -22,8 +22,37 @@ void AARogGameModeBase::StartPlay()
 
 void AARogGameModeBase::SpawnBotTimerElapsed()
 {
+	// Count alive bots before spawning
+	int32 NrOfAliveBots = 0;
+	for (TActorIterator<AARogAICharacter> It(GetWorld()); It; ++It)
+	{
+		AARogAICharacter* Bot = *It;
+
+		//UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(Bot->GetComponentByClass(UARogAttributeComponent::StaticClass()));
+		//UARogAttributeComponent* AttributeComp = Bot->FindComponentByClass<UARogAttributeComponent>();
+		UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(Bot);
+
+		if (ensure(AttributeComp) && AttributeComp->IsAlive())
+		{
+			NrOfAliveBots++;
+		}
+	}
+
+	float MaxBotCount = 10.0f;
+
+	// Spawn Curve
+	if (DifficultySpawnCurve)
+	{
+		MaxBotCount = DifficultySpawnCurve->GetFloatValue(GetWorld()->TimeSeconds);
+	}
+
+	// Check if it can spawn bots
+	if (NrOfAliveBots >= MaxBotCount)
+	{
+		return;
+	}
+
 	UEnvQueryInstanceBlueprintWrapper* QueryInstance = UEnvQueryManager::RunEQSQuery(this, SpawnBotEnvQuery, this, EEnvQueryRunMode::RandomBest5Pct, nullptr);
-	
 	if (QueryInstance)
 	{
 		QueryInstance->GetOnQueryFinishedEvent().AddDynamic(this, &AARogGameModeBase::OnQueryComplete);
@@ -34,34 +63,6 @@ void AARogGameModeBase::OnQueryComplete(UEnvQueryInstanceBlueprintWrapper* Query
 {
 	// Check if it has passed
 	if (QueryStatus != EEnvQueryStatus::Success)
-	{
-		return;
-	}
-	
-	// Count alive bots before spawning
-	int32 NrOfAliveBots = 0;
-	for (TActorIterator<AARogAICharacter> It(GetWorld()); It; ++It)
-	{
-		AARogAICharacter* Bot = *It;
-
-		UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(Bot->GetComponentByClass(UARogAttributeComponent::StaticClass()));
-
-		if (ensure(AttributeComp) && AttributeComp->IsAlive())
-		{
-			NrOfAliveBots++;
-		}
-	}
-
-	float MaxBotCount = 10.0f;
-	
-	// Spawn Curve
-	if (DifficultySpawnCurve)
-	{
-		MaxBotCount = DifficultySpawnCurve->GetFloatValue(GetWorld()->TimeSeconds);
-	}
-
-	// Check if it can spawn bots
-	if (NrOfAliveBots >= MaxBotCount)
 	{
 		return;
 	}

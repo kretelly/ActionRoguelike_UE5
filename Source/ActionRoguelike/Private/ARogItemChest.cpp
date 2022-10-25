@@ -47,12 +47,6 @@ void AARogItemChest::BeginPlay()
 	TimelineComp->SetTimelineLengthMode(ETimelineLengthMode::TL_LastKeyFrame);
 }
 
-// Called every frame
-void AARogItemChest::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void AARogItemChest::Interact_Implementation(AActor* InstigatorPawn)
 {
 	if (!TimelineComp->IsPlaying())

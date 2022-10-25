@@ -19,12 +19,15 @@ void AARogPowerupHealthPotion::Interact_Implementation(AActor* InstigatorPawn)
 		return;
 	}
 
-	UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(InstigatorPawn->GetComponentByClass(UARogAttributeComponent::StaticClass()));
+	//UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(InstigatorPawn->GetComponentByClass(UARogAttributeComponent::StaticClass()));
+	//UARogAttributeComponent* AttributeComp = InstigatorPawn->FindComponentByClass<UARogAttributeComponent>();
+	UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(InstigatorPawn);
+	
 	// Check if not already at max health
 	if (ensure(AttributeComp) && !AttributeComp->IsFullHealth())
 	{
 		// Only activate if healed successfully
-		if (AttributeComp->ApplyHealthChange(AttributeComp->GetHealthMax()))
+		if (AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
 		{
 			HideAndCooldownPowerup();
 		}

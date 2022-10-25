@@ -92,3 +92,8 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Setting Up a Game Mode](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/HowTo/SettingUpAGameMode/)
 - [Game Mode and Game State](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Framework/GameMode/)
 - [Environment Query Testing Pawn](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/ArtificialIntelligence/EQS/EQSTestingPawn/)
+
+## Lecture 13
+- [Metadata Specifiers](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/GameplayArchitecture/Metadata/)
+- [Ragdolling and how to recover from it](https://dev.epicgames.com/community/learning/tutorials/mvvL/unreal-engine-ragdolling-and-how-to-recover-from-it)
+- [Static Function Libraries, Your Own Version of UE4 C++, No Engine Compile Times](https://nerivec.github.io/old-ue4-wiki/pages/static-function-libraries-your-own-version-of-ue4-c-no-engine-compile-times.html)

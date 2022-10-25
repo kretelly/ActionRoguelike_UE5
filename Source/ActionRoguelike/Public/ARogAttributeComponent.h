@@ -13,9 +13,14 @@ class ACTIONROGUELIKE_API UARogAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-	// Sets default values for this component's properties
+public:
 	UARogAttributeComponent();
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	static UARogAttributeComponent* GetAttributeComponent(AActor* FromActor);
+	
+	UFUNCTION(BlueprintCallable, Category = "Attributes", meta=(DisplayName="IsAlive"))
+	static bool IsActorAlive(AActor* Actor);
 
 protected:
 
@@ -51,18 +56,9 @@ public:
 	float GetHealthMax() const;
 
 	UFUNCTION(BlueprintCallable)
-	bool ApplyHealthChange(float Delta);
+	bool ApplyHealthChange(AActor* InstigatorActor,float Delta);
 
 	// Dummy Actor -> used to change scalar parameters using event dispatcher
 	FOnHealthChange ParamChangeDelegate;
-
-
-//protected:
-	// Called when the game starts
-	//virtual void BeginPlay() override;
-
-//public:
-	// Called every frame
-	//virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-		
+	
 };
