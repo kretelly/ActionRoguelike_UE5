@@ -8,6 +8,7 @@
 #include "ARogInteractionComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "ARogAttributeComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -31,6 +32,8 @@ AARogCharacter::AARogCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
+
+	HandSocketName = "Muzzle_01";
 }
 
 void AARogCharacter::PostInitializeComponents()
@@ -112,16 +115,10 @@ void AARogCharacter::MoveRight(float Value)
 	AddMovementInput(Direction, Value);
 }
 
-// Primary Attack
-void AARogCharacter::PrimaryAttack()
+void AARogCharacter::StartAttackEffects()
 {
-	if (!GetWorldTimerManager().IsTimerActive(PrimaryAttackTimerHandle))
-	{
-		PlayAnimMontage(AttackAnim);
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindUObject(this, &AARogCharacter::PrimaryAbilityTimeElapsed, MagicProjectileClass);
-		GetWorldTimerManager().SetTimer(PrimaryAttackTimerHandle, TimerDelegate, 0.2f, false);
-	}
+	PlayAnimMontage(AttackAnim);
+	UGameplayStatics::SpawnEmitterAttached(CastingEffect, GetMesh(), HandSocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget);
 }
 
 // Primary Interact (Interfaces)
@@ -133,16 +130,16 @@ void AARogCharacter::PrimaryInteract()
 	}
 }
 
-// Teleport
-void AARogCharacter::TeleportAbility()
+// Primary Attack
+void AARogCharacter::PrimaryAttack()
 {
-	if (!GetWorldTimerManager().IsTimerActive(TeleportTimerHandle))
+	if (!GetWorldTimerManager().IsTimerActive(PrimaryAttackTimerHandle))
 	{
-		PlayAnimMontage(AttackAnim);
+		StartAttackEffects();
 
 		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindUObject(this, &AARogCharacter::PrimaryAbilityTimeElapsed, TeleportProjectileClass);
-		GetWorldTimerManager().SetTimer(TeleportTimerHandle, TimerDelegate, 0.2f, false);
+		TimerDelegate.BindUObject(this, &AARogCharacter::AbilityTimerElapsed, MagicProjectileClass);
+		GetWorldTimerManager().SetTimer(PrimaryAttackTimerHandle, TimerDelegate, 0.2f, false);
 	}
 }
 
@@ -151,15 +148,28 @@ void AARogCharacter::SecundaryAttack()
 {
 	if (!GetWorldTimerManager().IsTimerActive(SecundaryAttackTimerHandle))
 	{
-		PlayAnimMontage(AttackAnim);
+		StartAttackEffects();
 
 		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindUObject(this, &AARogCharacter::PrimaryAbilityTimeElapsed, BlackHoleProjectileClass);
+		TimerDelegate.BindUObject(this, &AARogCharacter::AbilityTimerElapsed, BlackHoleProjectileClass);
 		GetWorldTimerManager().SetTimer(SecundaryAttackTimerHandle, TimerDelegate, 0.2f, false);
 	}
 }
 
-void AARogCharacter::PrimaryAbilityTimeElapsed(TSubclassOf<AActor> Object)
+// Teleport
+void AARogCharacter::TeleportAbility()
+{
+	if (!GetWorldTimerManager().IsTimerActive(TeleportTimerHandle))
+	{
+		StartAttackEffects();
+
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindUObject(this, &AARogCharacter::AbilityTimerElapsed, TeleportProjectileClass);
+		GetWorldTimerManager().SetTimer(TeleportTimerHandle, TimerDelegate, 0.2f, false);
+	}
+}
+
+void AARogCharacter::AbilityTimerElapsed(TSubclassOf<AActor> Object)
 {
 	// Hand Location to Spawn Projectile
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");

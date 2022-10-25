@@ -4,6 +4,7 @@
 #include "AI/ARogAICharacter.h" 	
 #include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "ARogAttributeComponent.h"
 #include "AIController.h"
 
 #include "DrawDebugHelpers.h"
@@ -13,6 +14,11 @@
 AARogAICharacter::AARogAICharacter()
 {
     PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
+
+    AttributeComp = CreateDefaultSubobject<UARogAttributeComponent>(TEXT("AttributeComp"));
+
+    // Set the AI Controller to posses it
+    AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 void AARogAICharacter::PostInitializeComponents()

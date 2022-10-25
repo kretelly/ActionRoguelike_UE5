@@ -87,3 +87,8 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [AI Perception](https://docs.unrealengine.com/5.0/en-US/ai-perception-in-unreal-engine/)
 - [Simulate numpad for AI Debugging = Project Settings -> Gameplay Debugger -> Input](https://www.reddit.com/r/unrealengine/comments/ix5xy6/how_to_simulate_numpad_for_ai_debugging/)
 - [ensureMsgf](https://docs.unrealengine.com/5.0/en-US/API/Plugins/NeuralNetworkInference/ensureMsgf/)
+
+## Lecture 12
+- [Setting Up a Game Mode](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/HowTo/SettingUpAGameMode/)
+- [Game Mode and Game State](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Framework/GameMode/)
+- [Environment Query Testing Pawn](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/ArtificialIntelligence/EQS/EQSTestingPawn/)

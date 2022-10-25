@@ -7,6 +7,7 @@
 #include "ARogAICharacter.generated.h"
 
 class UPawnSensingComponent;
+class UARogAttributeComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API AARogAICharacter : public ACharacter
@@ -26,5 +27,8 @@ protected:
 	// It handles the delegate FSeePawnDelegate when it was trigged
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UARogAttributeComponent* AttributeComp;
 
 };

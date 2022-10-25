@@ -63,12 +63,20 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
+	// Start Play Attack Effects
+	void StartAttackEffects();
+
+	UPROPERTY(EditAnywhere, Category = Ability)
+	UParticleSystem* CastingEffect;
+	
+	FName HandSocketName;
+
 	// Actions
 	void PrimaryAttack();
 	FTimerHandle PrimaryAttackTimerHandle;
 	
 	// Handle Spawn Class After a period of time
-	void PrimaryAbilityTimeElapsed(TSubclassOf<AActor> Object);
+	void AbilityTimerElapsed(TSubclassOf<AActor> Object);
 
 	// Interaction with world using Interface
 	void PrimaryInteract();
@@ -92,3 +100,5 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
+
+// The best way to arganize the .h file is separete variables and functions by type.

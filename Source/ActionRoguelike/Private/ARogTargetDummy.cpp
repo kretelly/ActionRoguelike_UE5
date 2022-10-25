@@ -22,19 +22,20 @@ void AARogTargetDummy::OnParamChange(AActor* InstigatorActor, UARogAttributeComp
 	// UARogAttributeComponent* AttrComp = Cast<UARogAttributeComponent>(AttributeComp->GetClass()->GetDefaultObject());
 	// float DefaultHealth = AttrComp->Health; // The variable should be public
 	
-	float DefaultHealth = 100.0f;
-
 	if (bCanPlayDissolve)
 	{
-		float DissolveValue = 1 - (NewHealth/DefaultHealth);
-		if (DissolveValue > 1) Destroy();
+		//float DissolveValue = 1 - (NewHealth/DefaultHealth); // Node: 1-x
 
-		MeshComp->SetScalarParameterValueOnMaterials("DissolveAmount", DissolveValue);
+		float DefaultHealth = 100.0f;
+		float PercentHealth = NewHealth / DefaultHealth;
+
+		if (PercentHealth <= 0) Destroy();
+
+		MeshComp->SetScalarParameterValueOnMaterials("DissolveAmount", PercentHealth);
 	}
 
 	if (bCanPlayHitFlash)
 	{
-
 		MeshComp->SetScalarParameterValueOnMaterials("HitFlashTime", GetWorld()->TimeSeconds);
 	}
 }
