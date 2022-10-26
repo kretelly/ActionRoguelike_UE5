@@ -8,6 +8,8 @@
 #include "ARogAttributeComponent.h"
 #include "BrainComponent.h"
 #include "AIController.h"
+#include "Blueprint/UserWidget.h"
+#include "UI/ARogWorldUserWidget.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -36,15 +38,26 @@ void AARogAICharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCom
 {
     //if (NewHealth <= 0 && Delta <= 0.0f)
 
-    if (NewHealth <= 0)
+    if (Delta <= 0)
     {
+        // Create HealthBar on the top of the Minions' head
+        if (ActiveHealthBar == nullptr)
+        {
+            ActiveHealthBar = CreateWidget<UARogWorldUserWidget>(GetWorld(), HealthBarWidgetClass);
+            if (ActiveHealthBar)
+            {
+                ActiveHealthBar->AttachedActor = this;
+                ActiveHealthBar->AddToViewport(); // Call widget's construct event
+            }
+        }
+
         if (InstigatorActor != this)
         {
             // TODO: Check if the Instigador is not an AARogAICharacter!
             SetTargetActor(InstigatorActor);
         }
 
-        if (Delta <= 0.0f)
+        if (NewHealth <= 0.0f)
         {
             // Stop Behavior Tree
             AAIController* AIController = Cast<AAIController>(GetController());
@@ -55,11 +68,11 @@ void AARogAICharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCom
 
             // Ragdoll Collision
             //GetMesh()->SetSimulatePhysics(true);
+            GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             GetMesh()->SetAllBodiesSimulatePhysics(true);
             GetMesh()->SetCollisionProfileName("Ragdoll");
             GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-            //GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+           
             // Set Life Span
             SetLifeSpan(7.0f);
         }

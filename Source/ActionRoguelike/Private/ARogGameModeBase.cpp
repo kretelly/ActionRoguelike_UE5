@@ -80,3 +80,19 @@ void AARogGameModeBase::OnQueryComplete(UEnvQueryInstanceBlueprintWrapper* Query
 		GetWorld()->SpawnActor<AActor>(MinionClass, SpawnLocation, FRotator::ZeroRotator, SpawnParams);
 	}
 }
+
+void AARogGameModeBase::KillAll()
+{
+	for (TActorIterator<AARogAICharacter> It(GetWorld()); It; ++It)
+	{
+		AARogAICharacter* Bot = *It;
+
+		UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(Bot);
+
+		if (ensure(AttributeComp) && AttributeComp->IsAlive())
+		{
+			AttributeComp->Kill(this); // TODO: call from player fom kill credits
+		}
+	}
+
+}

@@ -99,6 +99,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	UFUNCTION(Exec)
+	void HealtSelf(float Amount = 100.f);
+
 };
 
 // The best way to arganize the .h file is separete variables and functions by type.

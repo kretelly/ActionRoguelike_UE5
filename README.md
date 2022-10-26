@@ -19,13 +19,14 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 
 ## Lecture 2
 - [Project Style Guide](https://github.com/Allar/ue5-style-guide)
-- [Designer's guide to Unreal Engine keyboard shortcuts](https://www.unrealengine.com/en-US/tech-blog/designer-s-guide-to-unreal-engine-keyboard-shortcuts)
 - [Epic’s Code Standards](https://docs.unrealengine.com/5.0/en-US/epic-cplusplus-coding-standard-for-unreal-engine/)
 - [Gameplay Framework Classes](https://www.tomlooman.com/unreal-engine-gameplay-framework/)
 - [Unreal Property System (Reflection)](https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection)
 - [UE4 UFUNCTION Keywords Explained](https://www.tomlooman.com/unreal-engine-ufunction-specifiers/)
 - [Property Specifiers](https://docs.unrealengine.com/5.0/en-US/unreal-engine-uproperty-specifiers/)
 - [Function Specifiers](https://docs.unrealengine.com/5.0/en-US/function-specifiers/)
+- [Designer's guide to Unreal Engine keyboard shortcuts](https://www.unrealengine.com/en-US/tech-blog/designer-s-guide-to-unreal-engine-keyboard-shortcuts)
+- [Atalhos de teclado no Visual Studio](https://learn.microsoft.com/pt-br/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio?view=vs-2022)
 
 ## Lecture 3
 - [PlayerController](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Framework/Controller/PlayerController/)
@@ -97,3 +98,9 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Metadata Specifiers](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/GameplayArchitecture/Metadata/)
 - [Ragdolling and how to recover from it](https://dev.epicgames.com/community/learning/tutorials/mvvL/unreal-engine-ragdolling-and-how-to-recover-from-it)
 - [Static Function Libraries, Your Own Version of UE4 C++, No Engine Compile Times](https://nerivec.github.io/old-ue4-wiki/pages/static-function-libraries-your-own-version-of-ue4-c-no-engine-compile-times.html)
+
+## Lecture 14
+- [Ben’s Blog with variety of useful UMG related articles](https://benui.ca/unreal/)
+- [UMG UI Designer](https://docs.unrealengine.com/5.0/en-US/umg-ui-designer-for-unreal-engine/)
+- [UMG Best Practices](https://www.unrealengine.com/en-US/tech-blog/umg-best-practices)
+- [Cheat Manager](https://docs.unrealengine.com/4.27/en-US/BlueprintAPI/CheatManager/)

@@ -224,6 +224,11 @@ void AARogCharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCompo
 	}
 }
 
+void AARogCharacter::HealtSelf(float Amount /* = 100.0f */)
+{
+	AttributeComp->ApplyHealthChange(this, Amount);
+}
+
 //GEngine->AddOnScreenDebugMessage(-1, 4.5f, FColor::Purple, "Event Fired");
 
 

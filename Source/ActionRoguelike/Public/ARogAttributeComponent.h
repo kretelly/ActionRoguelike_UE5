@@ -60,5 +60,8 @@ public:
 
 	// Dummy Actor -> used to change scalar parameters using event dispatcher
 	FOnHealthChange ParamChangeDelegate;
+
+	UFUNCTION(BlueprintCallable)
+	bool Kill(AActor* InstigatorActor);
 	
 };

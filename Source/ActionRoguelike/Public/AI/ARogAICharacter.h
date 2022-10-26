@@ -8,6 +8,7 @@
 
 class UPawnSensingComponent;
 class UARogAttributeComponent;
+class UARogWorldUserWidget;
 
 UCLASS()
 class ACTIONROGUELIKE_API AARogAICharacter : public ACharacter
@@ -35,5 +36,10 @@ protected:
 	void OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta);
 
 	void SetTargetActor(AActor* NewTarget);
+
+	UARogWorldUserWidget* ActiveHealthBar;
+
+	UPROPERTY(EditDefaultsOnly, Category = UI)
+	TSubclassOf<UARogWorldUserWidget> HealthBarWidgetClass;
 
 };

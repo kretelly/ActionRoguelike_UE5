@@ -29,6 +29,12 @@ float UARogAttributeComponent::GetHealthMax() const
 
 bool UARogAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
+	// god mode
+	if (!GetOwner()->CanBeDamaged())
+	{
+		return false;
+	}
+
 	Health += Delta;
 	Health = FMath::Clamp(Health, 0.0f, HealthMax);
 
@@ -72,4 +78,9 @@ bool UARogAttributeComponent::IsActorAlive(AActor* Actor)
 	}
 
 	return false;
+}
+
+bool UARogAttributeComponent::Kill(AActor* InstigatorActor)
+{
+	return ApplyHealthChange(InstigatorActor, -GetHealthMax());
 }
