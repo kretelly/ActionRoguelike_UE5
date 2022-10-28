@@ -6,8 +6,12 @@
 #include "EnvironmentQuery/EnvQueryInstanceBlueprintWrapper.h"
 #include "AI/ARogAICharacter.h"
 #include "ARogAttributeComponent.h"
+#include "ARogCharacter.h"
 #include "EngineUtils.h"
 
+
+// Creating our console variable to control the spawn bot
+static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ARog.SpawnBots"), true, TEXT("Toggle spawn bots rate!"), EConsoleVariableFlags::ECVF_Cheat);
 
 AARogGameModeBase::AARogGameModeBase()
 {
@@ -22,6 +26,13 @@ void AARogGameModeBase::StartPlay()
 
 void AARogGameModeBase::SpawnBotTimerElapsed()
 {
+	// Calling our console variable
+	if (!CVarSpawnBots.GetValueOnGameThread())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Bot spawning disable via cvar 'CVarSpawnBots'"));
+		return;
+	}
+
 	// Count alive bots before spawning
 	int32 NrOfAliveBots = 0;
 	for (TActorIterator<AARogAICharacter> It(GetWorld()); It; ++It)
@@ -96,3 +107,31 @@ void AARogGameModeBase::KillAll()
 	}
 
 }
+
+void AARogGameModeBase::RespawnPlayerElapsed(AController* Controller)
+{
+	if (Controller)
+	{
+		Controller->UnPossess();
+		RestartPlayer(Controller);
+	}
+}
+
+void AARogGameModeBase::OnActorKilled(AActor* VictimActor, AActor* KillerActor)
+{
+	AARogCharacter* Player = Cast<AARogCharacter>(VictimActor);
+	if (Player)
+	{
+		FTimerHandle RespawnPlayerTimerHandle;
+
+		FTimerDelegate Delegate;
+		Delegate.BindUObject(this, &AARogGameModeBase::RespawnPlayerElapsed, Player->GetController());
+
+		float RespawnDelay = 2.0f;
+		GetWorld()->GetTimerManager().SetTimer(RespawnPlayerTimerHandle, Delegate, RespawnDelay, false);
+	}
+}
+
+
+
+

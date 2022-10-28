@@ -4,8 +4,14 @@
 #include "ARogInteractionComponent.h"
 #include "ARogGameplayInterface.h"
 
+static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("ARog.InteractionDebugDraw"), false, TEXT("Enable Debug Lines for Interact Component."), ECVF_Cheat);
+
 void UARogInteractionComponent::PrimaryInteract()
 {
+	// Cvar
+	bool bDebugDraw = CVarDebugDrawInteraction.GetValueOnGameThread();
+
+	// Interaction
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
 
@@ -62,11 +68,14 @@ void UARogInteractionComponent::PrimaryInteract()
 				{
 					IARogGameplayInterface::Execute_Interact(HitActor, Pawn);
 
-					DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f, 0, 1.f);					
+					if(bDebugDraw)	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f, 0, 1.f);
+
 					break; // Break the for after found the first interact object
 				}
 			}
 		}
 	}
-	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+
+	if (bDebugDraw)	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+
 }

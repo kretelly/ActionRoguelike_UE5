@@ -9,7 +9,9 @@
 AARogTargetDummy::AARogTargetDummy()
 {
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
-	MeshComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	MeshComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+	MeshComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	RootComponent = MeshComp;
 
 	AttributeComp = CreateDefaultSubobject<UARogAttributeComponent>("AttributeComp");

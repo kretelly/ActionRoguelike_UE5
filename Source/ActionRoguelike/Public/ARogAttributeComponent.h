@@ -56,6 +56,9 @@ public:
 	float GetHealthMax() const;
 
 	UFUNCTION(BlueprintCallable)
+	float GetHealth() const;
+
+	UFUNCTION(BlueprintCallable)
 	bool ApplyHealthChange(AActor* InstigatorActor,float Delta);
 
 	// Dummy Actor -> used to change scalar parameters using event dispatcher

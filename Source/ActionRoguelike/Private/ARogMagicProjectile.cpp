@@ -7,12 +7,14 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ARogAttributeComponent.h"
+#include "Blueprint/ARogGameplayFunctionLibrary.h"
 
 // Sets default values
 AARogMagicProjectile::AARogMagicProjectile()
 {
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AARogMagicProjectile::OnActorBeginOverlap);
-	DamageAmount = -20.0f;
+	Projectile->InitialSpeed = 3000.0f;
+	DamageAmount = 20.0f;
 }
 
 void AARogMagicProjectile::PostInitializeComponents()
@@ -28,8 +30,8 @@ void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedCo
 {
 	if (OtherActor && OtherActor != GetInstigator())
 	{
-		// Get and check if the overlaped actor has AttributeComp
-		
+		/* Get and check if the overlaped actor has AttributeComp
+		* 
 		//UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(OtherActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));
 		//UARogAttributeComponent* AttributeComp = OtherActor->FindComponentByClass<UARogAttributeComponent>();
 		UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(OtherActor);
@@ -37,6 +39,12 @@ void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedCo
 		if (AttributeComp && UARogAttributeComponent::IsActorAlive(OtherActor))
 		{
 			AttributeComp->ApplyHealthChange(GetInstigator(), DamageAmount);
+			Explode();
+		}
+		*/
+
+		if (UARogGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
+		{
 			Explode();
 		}
 	}

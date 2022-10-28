@@ -9,6 +9,8 @@
 #include "Components/AudioComponent.h"
 #include "Camera/CameraShakeBase.h"
 #include "Sound/SoundCue.h"
+#include "Blueprint/ARogGameplayFunctionLibrary.h"
+#include "ARogTargetDummy.h"
 
 
 // Sets default values
@@ -69,6 +71,11 @@ void AARogProjectileBase::OnComponentHit(UPrimitiveComponent* HitComponent, AAct
 {
 	if (OtherActor != GetInstigator())
 	{
+		if (Cast<AARogTargetDummy>(OtherActor))
+		{
+			UARogGameplayFunctionLibrary::ApplyDamage(this, OtherActor, 20.0f);
+		}
+
 		Explode();
 	}
 }

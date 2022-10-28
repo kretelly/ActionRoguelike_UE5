@@ -92,6 +92,9 @@ protected:
 	UFUNCTION()
 	void OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta);
 
+	// We're overriding this function to fix the GetActorEyesViewPoint, simple way to fix the Interact Component.
+	virtual FVector GetPawnViewLocation() const override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

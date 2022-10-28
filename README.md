@@ -104,3 +104,9 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [UMG UI Designer](https://docs.unrealengine.com/5.0/en-US/umg-ui-designer-for-unreal-engine/)
 - [UMG Best Practices](https://www.unrealengine.com/en-US/tech-blog/umg-best-practices)
 - [Cheat Manager](https://docs.unrealengine.com/4.27/en-US/BlueprintAPI/CheatManager/)
+
+## Lecture 15
+- [Console Variables in C++](https://docs.unrealengine.com/4.27/en-US/ProductionPipelines/DevelopmentSetup/Tools/ConsoleManager/)
+- [Console Variables Editor](https://docs.unrealengine.com/5.0/en-US/console-variables-editor/)
+- [Respawning a Player Character](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/HowTo/RespawnPlayer/)
+- [Blueprint Function Libraries](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/BlueprintFunctionLibraries/)

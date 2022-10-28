@@ -10,6 +10,9 @@
 #include "AIController.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/ARogWorldUserWidget.h"
+#include "ARogCharacter.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -21,7 +24,11 @@ AARogAICharacter::AARogAICharacter()
 
     AttributeComp = CreateDefaultSubobject<UARogAttributeComponent>(TEXT("AttributeComp"));
 
-    // Set the AI Controller to posses it
+    //Set collsion
+    GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore); //TODO: Create custom collision to handle this.
+    GetMesh()->SetGenerateOverlapEvents(true);
+
+    // Set the AI Controller to possess it when placed or spawned into the world
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
@@ -36,8 +43,6 @@ void AARogAICharacter::PostInitializeComponents()
 
 void AARogAICharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
-    //if (NewHealth <= 0 && Delta <= 0.0f)
-
     if (Delta <= 0)
     {
         // Create HealthBar on the top of the Minions' head
@@ -52,13 +57,18 @@ void AARogAICharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCom
         }
 
         if (InstigatorActor != this)
-        {
-            // TODO: Check if the Instigador is not an AARogAICharacter!
-            SetTargetActor(InstigatorActor);
+        {            
+            SetTargetActor(InstigatorActor); 
         }
 
         if (NewHealth <= 0.0f)
         {
+            // Remove HealthBar from viewport
+            if (ActiveHealthBar)
+            {
+                ActiveHealthBar->RemoveFromParent();
+            }
+
             // Stop Behavior Tree
             AAIController* AIController = Cast<AAIController>(GetController());
             if (AIController)
@@ -67,12 +77,12 @@ void AARogAICharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCom
             }
 
             // Ragdoll Collision
-            //GetMesh()->SetSimulatePhysics(true);
-            GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            GetMesh()->SetAllBodiesSimulatePhysics(true);
+            GetMesh()->SetAllBodiesSimulatePhysics(true); //GetMesh()->SetSimulatePhysics(true);
             GetMesh()->SetCollisionProfileName("Ragdoll");
-            GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-           
+            
+            GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+            GetCharacterMovement()->DisableMovement();
+
             // Set Life Span
             SetLifeSpan(7.0f);
         }
@@ -90,10 +100,13 @@ void AARogAICharacter::SetTargetActor(AActor* NewTarget)
     AAIController* AIController = Cast<AAIController>(GetController());
     if (AIController)
     {
-        //UBlackboardComponent* BlackboardComp = Cast<UBlackboardComponent>(AIController->GetBlackboardComponent());
-        //BlackboardComp->SetValueAsObject("TargetActor", NewTarget);
-
-        AIController->GetBlackboardComponent()->SetValueAsObject("TargetActor", NewTarget);
+        // This check avoid it shot another AI Character
+        if (Cast<AARogCharacter>(NewTarget))
+        {
+            //UBlackboardComponent* BlackboardComp = Cast<UBlackboardComponent>(AIController->GetBlackboardComponent());
+            //BlackboardComp->SetValueAsObject("TargetActor", NewTarget)
+            AIController->GetBlackboardComponent()->SetValueAsObject("TargetActor", NewTarget);
+        }
     }
 }
 

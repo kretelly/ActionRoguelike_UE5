@@ -9,6 +9,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "ARogAttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/CapsuleComponent.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -171,6 +172,11 @@ void AARogCharacter::TeleportAbility()
 
 void AARogCharacter::AbilityTimerElapsed(TSubclassOf<AActor> Object)
 {
+
+	//Console Variable -> courses.tomlooman.com/courses/1320807/lectures/34466453/comments/17237945
+	//static const auto CVar = IConsoleManager::Get().FindConsoleVariable(TEXT("ARog.InteractionDebugDraw"));
+	static IConsoleVariable* ICVar = IConsoleManager::Get().FindConsoleVariable(TEXT("ARog.InteractionDebugDraw"));
+
 	// Hand Location to Spawn Projectile
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
@@ -179,6 +185,7 @@ void AARogCharacter::AbilityTimerElapsed(TSubclassOf<AActor> Object)
 	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
 	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
 	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
+	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_Pawn);
 
 	FVector StartLocation = CameraComp->GetComponentLocation();
 	FVector TargetLocation = StartLocation + (CameraComp->GetForwardVector() * 10000.0f);
@@ -189,10 +196,13 @@ void AARogCharacter::AbilityTimerElapsed(TSubclassOf<AActor> Object)
 	FRotator Rotation;
 	if (bIsBlockingLine)
 	{
+		if (ICVar->GetBool()) DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 32.0f, 32, FColor::Green, false, 2.0f, 0, 1.f);
+		if (ICVar->GetBool()) DrawDebugLine(GetWorld(), StartLocation, TargetLocation, FColor::Green, false, 2.0f, 0, 1.0f);
 		Rotation = UKismetMathLibrary::FindLookAtRotation(HandLocation, HitResult.Location);
 	}
 	else
 	{
+		if (ICVar->GetBool()) DrawDebugLine(GetWorld(), StartLocation, TargetLocation, FColor::Red, false, 3.0f);
 		Rotation = UKismetMathLibrary::FindLookAtRotation(HandLocation, TargetLocation);
 	}
 
@@ -217,8 +227,10 @@ void AARogCharacter::AbilityTimerElapsed(TSubclassOf<AActor> Object)
 
 void AARogCharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
-	if (NewHealth <= 0 && Delta < 0.0f)
-	{
+	if (NewHealth <= 0)
+	{		
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Avoid get stuck on dead pawn and also avoid multiplies spawn.
+
 		APlayerController* PC = Cast<APlayerController>(GetController());
 		DisableInput(PC);
 	}
@@ -229,6 +241,9 @@ void AARogCharacter::HealtSelf(float Amount /* = 100.0f */)
 	AttributeComp->ApplyHealthChange(this, Amount);
 }
 
+FVector AARogCharacter::GetPawnViewLocation() const
+{
+	return CameraComp->GetComponentLocation();
+}
+
 //GEngine->AddOnScreenDebugMessage(-1, 4.5f, FColor::Purple, "Event Fired");
-
-

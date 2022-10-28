@@ -3,6 +3,11 @@
 
 #include "ARogAttributeComponent.h"
 #include "GameFramework/Character.h"
+#include "ARogGameModeBase.h"
+
+
+// Console variable to control increase or reduce the damage
+static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("ARog.CVarDamageMultiplier"), true, TEXT("Global Damage Modifier for Attribute Component."), EConsoleVariableFlags::ECVF_Cheat);
 
 
 // Sets default values for this component's properties
@@ -22,6 +27,11 @@ bool  UARogAttributeComponent::IsFullHealth() const
 	return Health == HealthMax;
 }
 
+float UARogAttributeComponent::GetHealth() const
+{
+	return Health;
+}
+
 float UARogAttributeComponent::GetHealthMax() const
 {
 	return HealthMax;
@@ -30,16 +40,20 @@ float UARogAttributeComponent::GetHealthMax() const
 bool UARogAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
 	// god mode
-	if (!GetOwner()->CanBeDamaged())
+	if (!GetOwner()->CanBeDamaged() && Delta < 0.0f)
 	{
 		return false;
 	}
 
-	Health += Delta;
-	Health = FMath::Clamp(Health, 0.0f, HealthMax);
+	// Calling CVarDamageMultiplier console variable
+	// The great about this cvar is the fact I control the damage, so I can teste many number until I feel the great damage amount.
+	if (Delta < 0.0f)
+	{
+		float DamageMultiplier = CVarDamageMultiplier.GetValueOnGameThread();
+		Delta *= DamageMultiplier;
+	}
 
-	// if health is 0, so we should pass a delta equals zero. 
-	//if (Health == 0.0f) { Delta = 0.0f; }
+	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 
 	HealthChangeDelegate.Broadcast(InstigatorActor, this, Health, Delta);
 	ParamChangeDelegate.Broadcast(InstigatorActor, this, Health, Delta); // Target Dummy
@@ -53,7 +67,17 @@ bool UARogAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float D
 		Character->GetMesh()->SetScalarParameterValueOnMaterials("HitFlashTime", GetWorld()->TimeSeconds);
 	}
 
-	return Health > 0;
+	// Died -> this handles respawn!
+	if (Health <= 0.0f)
+	{
+		AARogGameModeBase* GM = GetWorld()->GetAuthGameMode<AARogGameModeBase>();
+		if(GM)
+		{
+			GM->OnActorKilled(GetOwner(), InstigatorActor);
+		}
+	}
+
+	return Health > 0; //True if still alive, otherwise false.
 }
 
 UARogAttributeComponent* UARogAttributeComponent::GetAttributeComponent(AActor* FromActor)
@@ -63,7 +87,6 @@ UARogAttributeComponent* UARogAttributeComponent::GetAttributeComponent(AActor* 
 		return FromActor->FindComponentByClass<UARogAttributeComponent>();
 		//return Cast<UARogAttributeComponent>(FromActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));
 	}
-
 	return nullptr;
 }
 
