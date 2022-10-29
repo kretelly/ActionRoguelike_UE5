@@ -10,6 +10,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UARogInteractionComponent;
 class UARogAttributeComponent;
+class UARogActionComponent;
 class UAnimMontage;
 
 UCLASS()
@@ -20,20 +21,6 @@ class ACTIONROGUELIKE_API AARogCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AARogCharacter();
-
-protected:
-
-	UPROPERTY(EditDefaultsOnly, Category = Ability)
-	TSubclassOf<AActor> MagicProjectileClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = Ability)
-	TSubclassOf<AActor> TeleportProjectileClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = Ability)
-	TSubclassOf<AActor> BlackHoleProjectileClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = Ability)
-	UAnimMontage* AttackAnim;
 
 protected:
 	
@@ -53,6 +40,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UARogAttributeComponent* AttributeComp;
 
+	// Action component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UARogActionComponent* ActionComp;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -63,31 +54,21 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
-	// Start Play Attack Effects
-	void StartAttackEffects();
-
-	UPROPERTY(EditAnywhere, Category = Ability)
-	UParticleSystem* CastingEffect;
-	
-	FName HandSocketName;
+	// Sprint Ability
+	void SprintStart();
+	void SprintStop();
 
 	// Actions
 	void PrimaryAttack();
-	FTimerHandle PrimaryAttackTimerHandle;
-	
-	// Handle Spawn Class After a period of time
-	void AbilityTimerElapsed(TSubclassOf<AActor> Object);
 
 	// Interaction with world using Interface
 	void PrimaryInteract();
 
 	// Teleport the actor using a projectile
 	void TeleportAbility();
-	FTimerHandle TeleportTimerHandle;
 	
 	// Secundary Attack
 	void SecundaryAttack();
-	FTimerHandle SecundaryAttackTimerHandle;
 
 	UFUNCTION()
 	void OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta);
@@ -96,10 +77,8 @@ protected:
 	virtual FVector GetPawnViewLocation() const override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:

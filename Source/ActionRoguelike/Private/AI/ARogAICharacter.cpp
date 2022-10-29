@@ -5,7 +5,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "BrainComponent.h"
 #include "AIController.h"
 #include "Blueprint/UserWidget.h"

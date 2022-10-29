@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ARogInteractionComponent.h"
+#include "Components/ARogInteractionComponent.h"
 #include "ARogGameplayInterface.h"
 
 static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("ARog.InteractionDebugDraw"), false, TEXT("Enable Debug Lines for Interact Component."), ECVF_Cheat);

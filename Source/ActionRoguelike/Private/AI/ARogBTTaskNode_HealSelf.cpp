@@ -2,7 +2,7 @@
 
 
 #include "AI/ARogBTTaskNode_HealSelf.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "AIController.h"
 
 EBTNodeResult::Type UARogBTTaskNode_HealSelf::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)

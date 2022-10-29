@@ -79,6 +79,7 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Behavior Tree Overview](https://docs.unrealengine.com/5.0/en-US/behavior-tree-in-unreal-engine---overview/)
 - [Blackboard](https://docs.unrealengine.com/5.0/en-US/BlueprintAPI/AI/Components/Blackboard/)
 - [Artificial Intelligence](https://docs.unrealengine.com/5.0/en-US/artificial-intelligence-in-unreal-engine/)
+- [Unreal Engine AI with Behavior Trees | Unreal Engine](https://www.youtube.com/watch?v=iY1jnFvHgbE)
 - [Gameplay Debugger](https://docs.unrealengine.com/5.0/en-US/using-the-gameplay-debugger-in-unreal-engine/)
 
 ## Lecture 11
@@ -110,3 +111,12 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Console Variables Editor](https://docs.unrealengine.com/5.0/en-US/console-variables-editor/)
 - [Respawning a Player Character](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/HowTo/RespawnPlayer/)
 - [Blueprint Function Libraries](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/BlueprintFunctionLibraries/)
+
+## Lecture 16
+- [A Guided Tour of Gameplay Abilities | Inside Unreal](https://www.youtube.com/watch?v=YvXvWa6vbAA)
+- [Getting Started With the Gameplay Ability System in Unreal Engine 4](https://www.youtube.com/watch?v=jrzq6Io_Y4E)
+- [Using the Gameplay Ability System | Unreal Engine](https://www.youtube.com/watch?v=_713CSOWkTU)
+- [Gameplay Ability System Documentation](https://docs.unrealengine.com/5.0/en-US/gameplay-ability-system-for-unreal-engine/)
+- [Community Documentation (GAS)](https://github.com/tranek/GASDocumentation)
+- [Gameplay Tags](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/)
+- [Example Game Projects](https://docs.unrealengine.com/4.27/en-US/Resources/SampleGames/)

@@ -2,7 +2,7 @@
 
 
 #include "ARogPowerupHealthPotion.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 
 AARogPowerupHealthPotion::AARogPowerupHealthPotion()
 {

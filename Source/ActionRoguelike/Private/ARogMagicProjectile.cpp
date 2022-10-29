@@ -6,7 +6,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "Blueprint/ARogGameplayFunctionLibrary.h"
 
 // Sets default values
@@ -28,24 +28,27 @@ void AARogMagicProjectile::PostInitializeComponents()
 
 void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor && OtherActor != GetInstigator())
+	if (OtherActor)
 	{
-		/* Get and check if the overlaped actor has AttributeComp
-		* 
-		//UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(OtherActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));
-		//UARogAttributeComponent* AttributeComp = OtherActor->FindComponentByClass<UARogAttributeComponent>();
-		UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(OtherActor);
-	
-		if (AttributeComp && UARogAttributeComponent::IsActorAlive(OtherActor))
+		if (OtherActor != GetInstigator())
 		{
-			AttributeComp->ApplyHealthChange(GetInstigator(), DamageAmount);
-			Explode();
-		}
-		*/
+			/* Get and check if the overlaped actor has AttributeComp
+			*
+			//UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(OtherActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));
+			//UARogAttributeComponent* AttributeComp = OtherActor->FindComponentByClass<UARogAttributeComponent>();
+			UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(OtherActor);
 
-		if (UARogGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
-		{
-			Explode();
+			if (AttributeComp && UARogAttributeComponent::IsActorAlive(OtherActor))
+			{
+				AttributeComp->ApplyHealthChange(GetInstigator(), DamageAmount);
+				Explode();
+			}
+			*/
+
+			if (UARogGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
+			{
+				Explode();
+			}
 		}
 	}
 }

@@ -69,14 +69,17 @@ void AARogProjectileBase::PostInitializeComponents()
 
 void AARogProjectileBase::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (OtherActor != GetInstigator())
+	if (OtherActor)
 	{
-		if (Cast<AARogTargetDummy>(OtherActor))
+		if (OtherActor != GetInstigator())
 		{
-			UARogGameplayFunctionLibrary::ApplyDamage(this, OtherActor, 20.0f);
-		}
+			if (Cast<AARogTargetDummy>(OtherActor))
+			{
+				UARogGameplayFunctionLibrary::ApplyDamage(this, OtherActor, 20.0f);
+			}
 
-		Explode();
+			Explode();
+		}
 	}
 }
 

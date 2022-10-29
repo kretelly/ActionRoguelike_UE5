@@ -2,7 +2,7 @@
 
 
 #include "Blueprint/ARogGameplayFunctionLibrary.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "AI/ARogAICharacter.h" 
 
 bool UARogGameplayFunctionLibrary::ApplyDamage(AActor* DamageCauser, AActor* TargetActor, float DamageAmount)

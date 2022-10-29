@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "GameFramework/Character.h"
 #include "ARogGameModeBase.h"
 

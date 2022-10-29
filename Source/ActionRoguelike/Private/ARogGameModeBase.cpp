@@ -5,7 +5,7 @@
 #include "EnvironmentQuery/EnvQuery.h"
 #include "EnvironmentQuery/EnvQueryInstanceBlueprintWrapper.h"
 #include "AI/ARogAICharacter.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "ARogCharacter.h"
 #include "EngineUtils.h"
 

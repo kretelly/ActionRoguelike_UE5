@@ -3,7 +3,7 @@
 
 #include "ARogTargetDummy.h"
 #include "Components/StaticMeshComponent.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 
 // Sets default values
 AARogTargetDummy::AARogTargetDummy()

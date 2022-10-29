@@ -4,7 +4,7 @@
 #include "AI/ARogBTTaskNode_RangeAttack.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "AIController.h"
 
 

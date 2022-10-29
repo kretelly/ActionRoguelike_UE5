@@ -5,11 +5,12 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "ARogInteractionComponent.h"
+#include "Components/ARogInteractionComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/ARogActionComponent.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -30,11 +31,11 @@ AARogCharacter::AARogCharacter()
 	InteractionComp = CreateDefaultSubobject<UARogInteractionComponent>(TEXT("InteractionComp"));
 
 	AttributeComp = CreateDefaultSubobject<UARogAttributeComponent>(TEXT("AttributeComp"));
+	
+	ActionComp = CreateDefaultSubobject<UARogActionComponent>(TEXT("ActionComp"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
-
-	HandSocketName = "Muzzle_01";
 }
 
 void AARogCharacter::PostInitializeComponents()
@@ -43,13 +44,11 @@ void AARogCharacter::PostInitializeComponents()
 	AttributeComp->HealthChangeDelegate.AddDynamic(this, &AARogCharacter::OnHealthChange);
 }
 
-// Called when the game starts or when spawned
 void AARogCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-// Called every frame
 void AARogCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -73,7 +72,6 @@ void AARogCharacter::Tick(float DeltaTime)
 	*/
 }
 
-// Called to bind functionality to input
 void AARogCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -94,6 +92,9 @@ void AARogCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryInteract);
 		PlayerInputComponent->BindAction("Teleport", EInputEvent::IE_Pressed, this, &AARogCharacter::TeleportAbility);
 		PlayerInputComponent->BindAction("SecundaryAttack", EInputEvent::IE_Pressed, this, &AARogCharacter::SecundaryAttack);
+	
+		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &AARogCharacter::SprintStart);
+		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AARogCharacter::SprintStop);
 	}
 }
 
@@ -116,10 +117,14 @@ void AARogCharacter::MoveRight(float Value)
 	AddMovementInput(Direction, Value);
 }
 
-void AARogCharacter::StartAttackEffects()
+void AARogCharacter::SprintStart()
 {
-	PlayAnimMontage(AttackAnim);
-	UGameplayStatics::SpawnEmitterAttached(CastingEffect, GetMesh(), HandSocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget);
+	ActionComp->StartActionByName(this, "Sprint");
+}
+
+void AARogCharacter::SprintStop()
+{
+	ActionComp->StopActionByName(this, "Sprint");
 }
 
 // Primary Interact (Interfaces)
@@ -134,95 +139,19 @@ void AARogCharacter::PrimaryInteract()
 // Primary Attack
 void AARogCharacter::PrimaryAttack()
 {
-	if (!GetWorldTimerManager().IsTimerActive(PrimaryAttackTimerHandle))
-	{
-		StartAttackEffects();
-
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindUObject(this, &AARogCharacter::AbilityTimerElapsed, MagicProjectileClass);
-		GetWorldTimerManager().SetTimer(PrimaryAttackTimerHandle, TimerDelegate, 0.2f, false);
-	}
+	ActionComp->StartActionByName(this, "PrimaryAttack");
 }
 
-// Secundary Attack
+// Secundary Attack 
 void AARogCharacter::SecundaryAttack()
 {
-	if (!GetWorldTimerManager().IsTimerActive(SecundaryAttackTimerHandle))
-	{
-		StartAttackEffects();
-
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindUObject(this, &AARogCharacter::AbilityTimerElapsed, BlackHoleProjectileClass);
-		GetWorldTimerManager().SetTimer(SecundaryAttackTimerHandle, TimerDelegate, 0.2f, false);
-	}
+	ActionComp->StartActionByName(this, "SecundaryAttack"); // Black Hole
 }
 
 // Teleport
 void AARogCharacter::TeleportAbility()
 {
-	if (!GetWorldTimerManager().IsTimerActive(TeleportTimerHandle))
-	{
-		StartAttackEffects();
-
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindUObject(this, &AARogCharacter::AbilityTimerElapsed, TeleportProjectileClass);
-		GetWorldTimerManager().SetTimer(TeleportTimerHandle, TimerDelegate, 0.2f, false);
-	}
-}
-
-void AARogCharacter::AbilityTimerElapsed(TSubclassOf<AActor> Object)
-{
-
-	//Console Variable -> courses.tomlooman.com/courses/1320807/lectures/34466453/comments/17237945
-	//static const auto CVar = IConsoleManager::Get().FindConsoleVariable(TEXT("ARog.InteractionDebugDraw"));
-	static IConsoleVariable* ICVar = IConsoleManager::Get().FindConsoleVariable(TEXT("ARog.InteractionDebugDraw"));
-
-	// Hand Location to Spawn Projectile
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-
-	// Target Location (using linetrace)
-	FCollisionObjectQueryParams ObjectQueryParams;
-	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
-	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
-	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
-	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_Pawn);
-
-	FVector StartLocation = CameraComp->GetComponentLocation();
-	FVector TargetLocation = StartLocation + (CameraComp->GetForwardVector() * 10000.0f);
-
-	FHitResult HitResult;
-	bool bIsBlockingLine = GetWorld()->LineTraceSingleByObjectType(HitResult, StartLocation, TargetLocation, ObjectQueryParams);
-
-	FRotator Rotation;
-	if (bIsBlockingLine)
-	{
-		if (ICVar->GetBool()) DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 32.0f, 32, FColor::Green, false, 2.0f, 0, 1.f);
-		if (ICVar->GetBool()) DrawDebugLine(GetWorld(), StartLocation, TargetLocation, FColor::Green, false, 2.0f, 0, 1.0f);
-		Rotation = UKismetMathLibrary::FindLookAtRotation(HandLocation, HitResult.Location);
-	}
-	else
-	{
-		if (ICVar->GetBool()) DrawDebugLine(GetWorld(), StartLocation, TargetLocation, FColor::Red, false, 3.0f);
-		Rotation = UKismetMathLibrary::FindLookAtRotation(HandLocation, TargetLocation);
-	}
-
-	// Tranform Spawn
-	FTransform SpawnTM = FTransform(Rotation, HandLocation, FVector(1.0f));
-	//FTransform SpawnTM = UKismetMathLibrary::MakeTransform(HandLocation, Rotation, FVector(1.0f));
-
-	// Spawn Params
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Instigator = this;
-
-	if (Object)
-	{
-		GetWorld()->SpawnActor<AActor>(Object, SpawnTM, SpawnParams);
-	}
-
-	// Clear All Timers
-	GetWorldTimerManager().ClearTimer(PrimaryAttackTimerHandle);
-	GetWorldTimerManager().ClearTimer(TeleportTimerHandle);
+	ActionComp->StartActionByName(this, "TeleportAbility");
 }
 
 void AARogCharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta)

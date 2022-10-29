@@ -3,7 +3,7 @@
 
 #include "AI/ARogBTService_CheckHealth.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "ARogAttributeComponent.h"
+#include "Components/ARogAttributeComponent.h"
 #include "AIController.h"
 
 UARogBTService_CheckHealth::UARogBTService_CheckHealth()
