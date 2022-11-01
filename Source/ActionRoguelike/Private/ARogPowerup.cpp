@@ -10,10 +10,15 @@ AARogPowerup::AARogPowerup()
 	SphereComp->SetCollisionProfileName("Powerup");
 	RootComponent = SphereComp;
 
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
+	// Disable collision, instead we use SphereComp to handle interaction queries
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	MeshComp->SetupAttachment(RootComponent);
+
 	RespawnTime = 10.0f;
 }
 
-void AARogPowerup::Interact_Implementation(AActor* InstigatorPawn)
+void AARogPowerup::Interact_Implementation(APawn* InstigatorPawn)
 {
 	// logic in derived classes...
 }

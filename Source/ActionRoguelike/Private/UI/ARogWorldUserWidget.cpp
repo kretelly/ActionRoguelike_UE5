@@ -6,6 +6,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CanvasPanel.h"
 #include "Components/SizeBox.h"
+#include "GameFramework/Character.h"
+
 
 UARogWorldUserWidget::UARogWorldUserWidget(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ARogProjectileBase.h"
+#include "GameplayTagContainer.h"
 #include "ARogMagicProjectile.generated.h"
 
 class USphereComponent;
@@ -21,9 +22,12 @@ public:
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category="Damage")
 	float DamageAmount;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	FGameplayTag ParryTag;
+
 	// Called when the game starts or when spawned
 	//virtual void BeginPlay() override;
 

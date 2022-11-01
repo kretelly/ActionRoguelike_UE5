@@ -16,7 +16,7 @@ class ACTIONROGUELIKE_API AARogItemChest : public AActor, public IARogGameplayIn
 {
 	GENERATED_BODY()
 
-	void Interact_Implementation(AActor* InstigatorPawn);
+	void Interact_Implementation(APawn* InstigatorPawn);
 	
 public:	
 	// Sets default values for this actor's properties

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameplayTagContainer.h"
 #include "ARogCharacter.generated.h"
 
 class UCameraComponent;
@@ -70,11 +71,17 @@ protected:
 	// Secundary Attack
 	void SecundaryAttack();
 
+	// Parry Defense
+	void ToggleParry();
+
 	UFUNCTION()
 	void OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta);
 
 	// We're overriding this function to fix the GetActorEyesViewPoint, simple way to fix the Interact Component.
 	virtual FVector GetPawnViewLocation() const override;
+
+	UPROPERTY(EditDefaultsOnly, Category = Attack)
+	FGameplayTag ParryTag;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

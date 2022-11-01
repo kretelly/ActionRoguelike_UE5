@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/ARogAttributeComponent.h"
 #include "Blueprint/ARogGameplayFunctionLibrary.h"
+#include "Components/ARogActionComponent.h"
 
 // Sets default values
 AARogMagicProjectile::AARogMagicProjectile()
@@ -32,18 +33,22 @@ void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedCo
 	{
 		if (OtherActor != GetInstigator())
 		{
-			/* Get and check if the overlaped actor has AttributeComp
-			*
+			// Get and check if the overlaped actor has AttributeComp
 			//UARogAttributeComponent* AttributeComp = Cast<UARogAttributeComponent>(OtherActor->GetComponentByClass(UARogAttributeComponent::StaticClass()));
 			//UARogAttributeComponent* AttributeComp = OtherActor->FindComponentByClass<UARogAttributeComponent>();
-			UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(OtherActor);
+			//UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(OtherActor);
 
-			if (AttributeComp && UARogAttributeComponent::IsActorAlive(OtherActor))
+			// Expensive way to get GameplayTag
+			//static FGameplayTag ParryTag = FGameplayTag::RequestGameplayTag("Status.Parrying");
+
+			// Parry Attack
+			UARogActionComponent* ActionComp = OtherActor->FindComponentByClass<UARogActionComponent>();
+			if (ActionComp && ActionComp->ActiveGameplayTags.HasTag(ParryTag))
 			{
-				AttributeComp->ApplyHealthChange(GetInstigator(), DamageAmount);
-				Explode();
+				Projectile->Velocity = -Projectile->Velocity;
+				SetInstigator(Cast<APawn>(OtherActor));
+				return;
 			}
-			*/
 
 			if (UARogGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
 			{

@@ -4,27 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "ARogPowerup.h"
-#include "ARogPowerupHealthPotion.generated.h"
+#include "ARogPowerupCredits.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ACTIONROGUELIKE_API AARogPowerupHealthPotion : public AARogPowerup
+class ACTIONROGUELIKE_API AARogPowerupCredits : public AARogPowerup
 {
 	GENERATED_BODY()
 
 protected:
 
-	UPROPERTY(EditAnywhere, Category = "HealthPotion")
-	int32 CreditCost;
-	
-	// float healt amount?
+	UPROPERTY(EditAnywhere, Category = "Credits")
+	int32 CreditsAmount;
 
 public:
 
-	AARogPowerupHealthPotion();
-
 	void Interact_Implementation(APawn* InstigatorPawn) override;
+
+	AARogPowerupCredits();
 
 };

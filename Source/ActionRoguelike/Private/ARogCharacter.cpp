@@ -92,9 +92,9 @@ void AARogCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &AARogCharacter::PrimaryInteract);
 		PlayerInputComponent->BindAction("Teleport", EInputEvent::IE_Pressed, this, &AARogCharacter::TeleportAbility);
 		PlayerInputComponent->BindAction("SecundaryAttack", EInputEvent::IE_Pressed, this, &AARogCharacter::SecundaryAttack);
-	
 		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &AARogCharacter::SprintStart);
 		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AARogCharacter::SprintStop);
+		PlayerInputComponent->BindAction("Parry", EInputEvent::IE_Pressed, this, &AARogCharacter::ToggleParry);
 	}
 }
 
@@ -152,6 +152,19 @@ void AARogCharacter::SecundaryAttack()
 void AARogCharacter::TeleportAbility()
 {
 	ActionComp->StartActionByName(this, "TeleportAbility");
+}
+
+// Parry Defense
+void AARogCharacter::ToggleParry()
+{
+	if (!ActionComp->ActiveGameplayTags.HasTag(ParryTag))
+	{
+		ActionComp->ActiveGameplayTags.AddTag(ParryTag);
+	}
+	else
+	{
+		ActionComp->ActiveGameplayTags.RemoveTag(ParryTag);
+	}
 }
 
 void AARogCharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta)

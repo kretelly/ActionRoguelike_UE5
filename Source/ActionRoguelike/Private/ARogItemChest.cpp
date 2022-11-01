@@ -47,7 +47,7 @@ void AARogItemChest::BeginPlay()
 	TimelineComp->SetTimelineLengthMode(ETimelineLengthMode::TL_LastKeyFrame);
 }
 
-void AARogItemChest::Interact_Implementation(AActor* InstigatorPawn)
+void AARogItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if (!TimelineComp->IsPlaying())
 	{

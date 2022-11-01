@@ -46,6 +46,11 @@ bool UARogActionComponent::StartActionByName(AActor* Instigator, FName ActionNam
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
+			if (!Action->CanStart(Instigator))
+			{
+				continue;
+			}
+
 			Action->StartAction(Instigator);
 			return true;
 		}
@@ -59,8 +64,11 @@ bool UARogActionComponent::StopActionByName(AActor* Instigator, FName ActionName
 	{
 		if (Action && Action->ActionName == ActionName)
 		{
-			Action->StopAction(Instigator);
-			return true;
+			if (Action->IsRunning())
+			{
+				Action->StopAction(Instigator);
+				return true;
+			}
 		}
 	}
 	return false;

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "ARogActionComponent.generated.h"
 
 class UARogActionObject;
@@ -16,6 +17,9 @@ class ACTIONROGUELIKE_API UARogActionComponent : public UActorComponent
 		
 public:	
 	UARogActionComponent();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+	FGameplayTagContainer ActiveGameplayTags;
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	void AddAction(TSubclassOf<UARogActionObject> ActionClass);

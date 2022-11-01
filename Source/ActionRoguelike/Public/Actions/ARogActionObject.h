@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "GameplayTagContainer.h"
 #include "ARogActionObject.generated.h"
 
 class UWorld;
+class UARogActionComponent;
 /**
  * 
  */
@@ -15,7 +17,29 @@ class ACTIONROGUELIKE_API UARogActionObject : public UObject
 {
 	GENERATED_BODY()
 
+protected:
+	
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	UARogActionComponent* GetOwningComponent() const;
+
+	/* Tags added to owning actor when activated, removed when action stops */
+	UPROPERTY(EditDefaultsOnly, Category = "Tags")
+	FGameplayTagContainer GrantsTags;
+
+	/* Action can only start if OwningActor has none of these Tags applied */
+	UPROPERTY(EditDefaultsOnly, Category = "Tags")
+	FGameplayTagContainer BlockedTags;
+
+	// Track if we are running any attack / ability
+	bool bIsRunning;
+
 public:
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	bool IsRunning() const;
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Action")
+	bool CanStart(AActor* Instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	void StartAction(AActor* Instigator);

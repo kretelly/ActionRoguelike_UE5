@@ -3,16 +3,14 @@
 
 #include "ARogPowerupHealthPotion.h"
 #include "Components/ARogAttributeComponent.h"
+#include "ARogPlayerState.h"
 
 AARogPowerupHealthPotion::AARogPowerupHealthPotion()
 {
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>("MeshComp");
-	// Disable collision, instead we use SphereComp to handle interaction queries
-	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	MeshComp->SetupAttachment(RootComponent);
+	CreditCost = 50;
 }
 
-void AARogPowerupHealthPotion::Interact_Implementation(AActor* InstigatorPawn)
+void AARogPowerupHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if (!ensure(InstigatorPawn))
 	{
@@ -26,10 +24,13 @@ void AARogPowerupHealthPotion::Interact_Implementation(AActor* InstigatorPawn)
 	// Check if not already at max health
 	if (ensure(AttributeComp) && !AttributeComp->IsFullHealth())
 	{
-		// Only activate if healed successfully
-		if (AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
+		if (AARogPlayerState* PS = InstigatorPawn->GetPlayerState<AARogPlayerState>())
 		{
-			HideAndCooldownPowerup();
+			// Only activate if healed successfully
+			if (PS->RemoveCredits(CreditCost) && AttributeComp->ApplyHealthChange(this, AttributeComp->GetHealthMax()))
+			{
+				HideAndCooldownPowerup();
+			}
 		}
 	}
 }

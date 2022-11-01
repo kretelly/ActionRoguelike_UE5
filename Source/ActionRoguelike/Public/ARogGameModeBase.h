@@ -19,38 +19,60 @@ class ACTIONROGUELIKE_API AARogGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-public:
-	AARogGameModeBase();
-
-	virtual void StartPlay() override;
-
 protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	TSubclassOf<AActor> MinionClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	UEnvQuery* SpawnBotQuery;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	UCurveFloat* DifficultySpawnCurve;
 
 	FTimerHandle SpawnBotTimerHandle;
 
-	UPROPERTY(EditDefaultsOnly, Category = AI)
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float SpawnTimerInterval;
 
-	UPROPERTY(EditDefaultsOnly, Category = AI)
-	UCurveFloat* DifficultySpawnCurve;
+	// Read/write access as we could change this as our difficulty increases via Blueprint
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
+	int32 CreditsPerKill;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
+	UEnvQuery* PowerupSpawnQuery;
+
+	/* All power-up classes used to spawn with EQS at match start */
+	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
+	TArray<TSubclassOf<AActor>> PowerupClasses;
+
+	/* Distance required between power-up spawn locations */
+	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
+	float RequiredPowerupDistance;
+
+	/* Amount of powerups to spawn during match start */
+	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
+	int32 DesiredPowerupCount;
 
 	UFUNCTION()
 	void SpawnBotTimerElapsed();
 
-	UPROPERTY(EditDefaultsOnly, Category = AI)
-	TSubclassOf<AActor> MinionClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = AI)
-	UEnvQuery* SpawnBotEnvQuery;
+	UFUNCTION()
+	void OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 
 	UFUNCTION()
-	void OnQueryComplete(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+	void OnPowerupSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 
+	UFUNCTION()
 	void RespawnPlayerElapsed(AController* Controller);
 
 public:
 
-	virtual void OnActorKilled(AActor* VictimActor, AActor* KillerActor);
+	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
+
+	AARogGameModeBase();
+
+	virtual void StartPlay() override;
 
 	UFUNCTION(Exec)
 	void KillAll();

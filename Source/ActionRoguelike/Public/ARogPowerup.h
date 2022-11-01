@@ -13,17 +13,14 @@ UCLASS()
 class ACTIONROGUELIKE_API AARogPowerup : public AActor, public IARogGameplayInterface
 {
 	GENERATED_BODY()
-	
-public:	
-	
-	AARogPowerup();
-
-	void Interact_Implementation(AActor* InstigatorPawn) override;
 
 protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USphereComponent* SphereComp;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(EditAnywhere, Category = "Powerup")
 	float RespawnTime;
@@ -35,4 +32,9 @@ protected:
 
 	void SetPowerupState(bool bNewIsActive);
 
+public:
+
+	AARogPowerup();
+
+	void Interact_Implementation(APawn* InstigatorPawn) override;
 };

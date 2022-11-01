@@ -120,3 +120,9 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Community Documentation (GAS)](https://github.com/tranek/GASDocumentation)
 - [Gameplay Tags](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/)
 - [Example Game Projects](https://docs.unrealengine.com/4.27/en-US/Resources/SampleGames/)
+
+## Lecture 17
+- [Using Gameplay Tags to Label and Organize Your Content in Unreal Engine](https://www.unrealengine.com/en-US/tech-blog/using-gameplay-tags-to-label-and-organize-your-content-in-ue4)
+- [GameplayTags Docs](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/)
+- [Action RPG Sample Game](https://docs.unrealengine.com/4.27/en-US/Resources/SampleGames/ARPG/)
+

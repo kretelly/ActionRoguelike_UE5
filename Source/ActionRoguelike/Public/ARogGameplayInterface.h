@@ -24,5 +24,5 @@ class ACTIONROGUELIKE_API IARogGameplayInterface
 public:
 
 	UFUNCTION(BlueprintCallable,BlueprintNativeEvent)
-	void Interact(AActor* InstigatorPawn);
+	void Interact(APawn* InstigatorActor);
 };
