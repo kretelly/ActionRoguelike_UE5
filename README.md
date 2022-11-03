@@ -117,6 +117,7 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Getting Started With the Gameplay Ability System in Unreal Engine 4](https://www.youtube.com/watch?v=jrzq6Io_Y4E)
 - [Using the Gameplay Ability System | Unreal Engine](https://www.youtube.com/watch?v=_713CSOWkTU)
 - [Gameplay Ability System Documentation](https://docs.unrealengine.com/5.0/en-US/gameplay-ability-system-for-unreal-engine/)
+- [Gameplay Ability System Overview](https://docs.unrealengine.com/5.0/en-US/understanding-the-unreal-engine-gameplay-ability-system/)
 - [Community Documentation (GAS)](https://github.com/tranek/GASDocumentation)
 - [Gameplay Tags](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/)
 - [Example Game Projects](https://docs.unrealengine.com/4.27/en-US/Resources/SampleGames/)
@@ -127,3 +128,6 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Action RPG Sample Game](https://docs.unrealengine.com/4.27/en-US/Resources/SampleGames/ARPG/)
 
 ## Lecture 18
+- [Gameplay Attributes and Gameplay Effects](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/GameplayAbilitySystem/GameplayAttributesAndGameplayEffects/)
+- [Attributes and Effects In ARPG](https://docs.unrealengine.com/4.27/en-US/Resources/SampleGames/ARPG/GameplayAbilitiesinActionRPG/AttributesandEffects/)
+- [Gameplay Ability System](https://docs.unrealengine.com/4.26/en-US/InteractiveExperiences/GameplayAbilitySystem/)
