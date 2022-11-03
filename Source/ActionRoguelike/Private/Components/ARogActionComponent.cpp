@@ -17,7 +17,7 @@ void UARogActionComponent::BeginPlay()
 	// Start player's actions
 	for (TSubclassOf<UARogActionObject> ActionClass : DefaultActions)
 	{
-		AddAction(ActionClass);
+		AddAction(GetOwner(), ActionClass);
 	}
 }
 
@@ -26,7 +26,7 @@ void UARogActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UARogActionComponent::AddAction(TSubclassOf<UARogActionObject> ActionClass)
+void UARogActionComponent::AddAction(AActor* Instigator, TSubclassOf<UARogActionObject> ActionClass)
 {
 	if (ActionClass == nullptr)
 	{
@@ -37,7 +37,21 @@ void UARogActionComponent::AddAction(TSubclassOf<UARogActionObject> ActionClass)
 	if (NewAction)
 	{
 		Actions.Add(NewAction);
+
+		if (NewAction->bAutoStart && NewAction->CanStart(Instigator))
+		{
+			NewAction->StartAction(Instigator);
+		}
 	}
+}
+
+void UARogActionComponent::RemoveAction(UARogActionObject* ActionToRemove)
+{
+	if (!ensure(ActionToRemove && !ActionToRemove->IsRunning()))
+	{
+		return;
+	}
+	Actions.Remove(ActionToRemove);
 }
 
 bool UARogActionComponent::StartActionByName(AActor* Instigator, FName ActionName)

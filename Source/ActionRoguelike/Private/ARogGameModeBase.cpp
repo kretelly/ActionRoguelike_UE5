@@ -10,7 +10,6 @@
 #include "ARogCharacter.h"
 #include "EngineUtils.h"
 
-
 // Creating our console variable to control the spawn bot
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ARog.SpawnBots"), true, TEXT("Toggle spawn bots rate!"), EConsoleVariableFlags::ECVF_Cheat);
 
@@ -208,7 +207,7 @@ void AARogGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 		GetWorldTimerManager().SetTimer(RespawnTimerHandle, Delegate, RespawnDelay, false);
 	}
 
-	// Give Credits for kill
+	// Give Credits for kill (AI does not have Splayer State)
 	APawn* KillerPawn = Cast<APawn>(Killer);
 	if (KillerPawn)
 	{

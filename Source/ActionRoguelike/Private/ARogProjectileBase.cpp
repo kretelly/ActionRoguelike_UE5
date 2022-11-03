@@ -85,7 +85,7 @@ void AARogProjectileBase::OnComponentHit(UPrimitiveComponent* HitComponent, AAct
 
 void AARogProjectileBase::Explode_Implementation()
 {
-	if (!IsPendingKill())
+	if (IsValid(this))
 	{
 		// Play FVX
 		UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation(), GetActorRotation());

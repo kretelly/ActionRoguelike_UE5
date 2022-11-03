@@ -1,28 +1,48 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Components/ARogInteractionComponent.h"
 #include "ARogGameplayInterface.h"
+#include "UI/ARogWorldUserWidget.h"
 
 static TAutoConsoleVariable<bool> CVarDebugDrawInteraction(TEXT("ARog.InteractionDebugDraw"), false, TEXT("Enable Debug Lines for Interact Component."), ECVF_Cheat);
 
-void UARogInteractionComponent::PrimaryInteract()
+UARogInteractionComponent::UARogInteractionComponent()
+{
+	PrimaryComponentTick.bCanEverTick = true;
+	
+	TraceRadius = 30.0f;
+	TraceDistance = 500.0f;
+	CollisionChannel = ECollisionChannel::ECC_WorldDynamic;
+}
+
+void UARogInteractionComponent::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void UARogInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	FindBestInteractable();
+}
+
+void UARogInteractionComponent::FindBestInteractable()
 {
 	// Cvar
 	bool bDebugDraw = CVarDebugDrawInteraction.GetValueOnGameThread();
 
-	// Interaction
 	FCollisionObjectQueryParams ObjectQueryParams;
-	ObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(CollisionChannel);
 
 	AActor* Owner = GetOwner();
+
 	FVector EyeLocation;
 	FRotator EyeRotation;
 	Owner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
-	FVector End = EyeLocation + (EyeRotation.Vector() * 1000.0f);
+	FVector End = EyeLocation + (EyeRotation.Vector() * TraceDistance);
 
 	/**	Simple Line Trace
-	
 	FHitResult HitResult;
 	bool bIsBlockingLine = GetWorld()->LineTraceSingleByObjectType(HitResult, EyeLocation, End, ObjectQueryParams);
 
@@ -39,43 +59,79 @@ void UARogInteractionComponent::PrimaryInteract()
 			}
 		}
 	}
-
 	FColor LineColor = bIsBlockingLine ? FColor::Green : FColor::Red;
-	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
-
+	if (bDebugDraw)	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
 	*/
 
 	// Sweep
 	TArray<FHitResult> Hits;
 
-	float Radius = 17.f;	
 	FCollisionShape Shape;
-	Shape.SetSphere(Radius);
+	Shape.SetSphere(TraceRadius);
 
-	bool bIsBlockingLine = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape);
-	FColor LineColor = bIsBlockingLine ? FColor::Green : FColor::Red;
+	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape);
 
-	for (auto Hit : Hits)
+	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+
+	// Clear ref before trying to fill
+	FocusedActor = nullptr;
+
+	for (FHitResult Hit : Hits)
 	{
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor)
 		{
-			// Check if the hitted actor implents the our custom Interface
+			// Check if the hitted actor implents our custom Interface
 			if (HitActor->Implements<UARogGameplayInterface>())
 			{
-				APawn* Pawn = Cast<APawn>(Owner);
-				if (Pawn)
+				FocusedActor = HitActor;
+				
+				if (bDebugDraw)
 				{
-					IARogGameplayInterface::Execute_Interact(HitActor, Pawn);
-
-					if(bDebugDraw)	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f, 0, 1.f);
-
-					break; // Break the for after found the first interact object
+					DrawDebugSphere(GetWorld(), Hit.ImpactPoint, TraceRadius, 32, LineColor, false, 2.0f, 0, 1.f);
 				}
+
+				break;
 			}
 		}
 	}
 
-	if (bDebugDraw)	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+	if (FocusedActor)
+	{
+		if (DefaultWidgetInstance == nullptr && ensure(DefaultWidgetClass))
+		{
+			DefaultWidgetInstance = CreateWidget<UARogWorldUserWidget>(GetWorld(), DefaultWidgetClass);
+		}
 
+		if (DefaultWidgetInstance)
+		{
+			DefaultWidgetInstance->AttachedActor = FocusedActor;
+
+			if (!DefaultWidgetInstance->IsInViewport())
+			{
+				DefaultWidgetInstance->AddToViewport();
+			}
+		}
+	}
+	else
+	{
+		if (DefaultWidgetInstance)
+		{
+			DefaultWidgetInstance->RemoveFromParent();
+		}
+	}
+
+	if (bDebugDraw) DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+}
+
+void UARogInteractionComponent::PrimaryInteract()
+{
+	if (FocusedActor == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "No Focus Actor to interact.");
+		return;
+	}
+
+	APawn* Pawn = Cast<APawn>(GetOwner());
+	IARogGameplayInterface::Execute_Interact(FocusedActor, Pawn);
 }

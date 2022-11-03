@@ -10,6 +10,7 @@
 class USphereComponent;
 class UParticleSystemComponent;
 class UProjectileMovementComponent;
+class UARogActionEffect;
 
 UCLASS()
 class ACTIONROGUELIKE_API AARogMagicProjectile : public AARogProjectileBase // Re-parented from AActor
@@ -17,7 +18,6 @@ class ACTIONROGUELIKE_API AARogMagicProjectile : public AARogProjectileBase // R
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AARogMagicProjectile();
 
 protected:
@@ -28,14 +28,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FGameplayTag ParryTag;
 
-	// Called when the game starts or when spawned
-	//virtual void BeginPlay() override;
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	TSubclassOf<UARogActionEffect> BurningActionClass;
 
 	virtual void PostInitializeComponents() override;
-
-public:	
-	// Called every frame
-	//virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	void OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

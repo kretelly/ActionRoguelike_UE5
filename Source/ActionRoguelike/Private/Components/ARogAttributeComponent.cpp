@@ -9,7 +9,6 @@
 // Console variable to control increase or reduce the damage
 static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("ARog.CVarDamageMultiplier"), true, TEXT("Global Damage Modifier for Attribute Component."), EConsoleVariableFlags::ECVF_Cheat);
 
-
 // Sets default values for this component's properties
 UARogAttributeComponent::UARogAttributeComponent()
 {
@@ -39,7 +38,7 @@ float UARogAttributeComponent::GetHealthMax() const
 
 bool UARogAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
-	// god mode
+	// god MODE
 	if (!GetOwner()->CanBeDamaged() && Delta < 0.0f)
 	{
 		return false;

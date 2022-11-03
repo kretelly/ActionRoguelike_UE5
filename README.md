@@ -126,3 +126,4 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [GameplayTags Docs](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/)
 - [Action RPG Sample Game](https://docs.unrealengine.com/4.27/en-US/Resources/SampleGames/ARPG/)
 
+## Lecture 18

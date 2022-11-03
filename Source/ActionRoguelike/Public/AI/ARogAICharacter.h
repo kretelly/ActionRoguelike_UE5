@@ -9,6 +9,7 @@
 class UPawnSensingComponent;
 class UARogAttributeComponent;
 class UARogWorldUserWidget;
+class UARogActionComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API AARogAICharacter : public ACharacter
@@ -27,6 +28,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UARogAttributeComponent* AttributeComp;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UARogActionComponent* ActionComp;
 
 	// It handles the delegate FSeePawnDelegate when it was trigged
 	UFUNCTION()

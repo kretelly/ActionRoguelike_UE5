@@ -13,6 +13,7 @@
 #include "ARogCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/ARogActionComponent.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -23,6 +24,8 @@ AARogAICharacter::AARogAICharacter()
     PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>("PawnSensingComp");
 
     AttributeComp = CreateDefaultSubobject<UARogAttributeComponent>(TEXT("AttributeComp"));
+
+    ActionComp = CreateDefaultSubobject<UARogActionComponent>(TEXT("ActionComp"));
 
     //Set collsion
     GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore); //TODO: Create custom collision to handle this.

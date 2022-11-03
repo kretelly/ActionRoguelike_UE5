@@ -9,8 +9,8 @@
 #include "Components/ARogAttributeComponent.h"
 #include "Blueprint/ARogGameplayFunctionLibrary.h"
 #include "Components/ARogActionComponent.h"
+#include "Actions/ARogActionEffect.h"
 
-// Sets default values
 AARogMagicProjectile::AARogMagicProjectile()
 {
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AARogMagicProjectile::OnActorBeginOverlap);
@@ -53,6 +53,12 @@ void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedCo
 			if (UARogGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
 			{
 				Explode();
+
+				// Add Buff
+				if (ActionComp)
+				{
+					ActionComp->AddAction(GetOwner(), BurningActionClass);
+				}
 			}
 		}
 	}

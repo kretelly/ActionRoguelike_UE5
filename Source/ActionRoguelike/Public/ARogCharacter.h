@@ -91,7 +91,6 @@ public:
 public:
 	UFUNCTION(Exec)
 	void HealtSelf(float Amount = 100.f);
-
 };
 
 // The best way to arganize the .h file is separete variables and functions by type.

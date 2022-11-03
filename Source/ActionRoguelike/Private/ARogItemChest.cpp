@@ -22,6 +22,7 @@ AARogItemChest::AARogItemChest()
 
 	ParticleSysComp = CreateDefaultSubobject<UParticleSystemComponent>("ParticleSysComp");
 	ParticleSysComp->SetupAttachment(BaseMesh);
+	ParticleSysComp->bAutoActivate = false;
 
 	TimelineComp = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineComp"));
 }
@@ -30,8 +31,6 @@ AARogItemChest::AARogItemChest()
 void AARogItemChest::BeginPlay()
 {
 	Super::BeginPlay();
-
-	ParticleSysComp->bAutoActivate = false;
 
 	// Timeline track
 	FOnTimelineFloat TimelineCurveTrack;

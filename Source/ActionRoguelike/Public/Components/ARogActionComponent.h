@@ -18,11 +18,14 @@ class ACTIONROGUELIKE_API UARogActionComponent : public UActorComponent
 public:	
 	UARogActionComponent();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay Tags")
 	FGameplayTagContainer ActiveGameplayTags;
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
-	void AddAction(TSubclassOf<UARogActionObject> ActionClass);
+	void AddAction(AActor* Instigator, TSubclassOf<UARogActionObject> ActionClass);
+
+	UFUNCTION(BlueprintCallable, Category = "Actions")
+	void RemoveAction(UARogActionObject* ActionToRemove);
 
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	bool StartActionByName(AActor* Instigator, FName ActionName);
