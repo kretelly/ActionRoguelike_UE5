@@ -131,3 +131,10 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Gameplay Attributes and Gameplay Effects](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/GameplayAbilitySystem/GameplayAttributesAndGameplayEffects/)
 - [Attributes and Effects In ARPG](https://docs.unrealengine.com/4.27/en-US/Resources/SampleGames/ARPG/GameplayAbilitiesinActionRPG/AttributesandEffects/)
 - [Gameplay Ability System](https://docs.unrealengine.com/4.26/en-US/InteractiveExperiences/GameplayAbilitySystem/)
+
+## Lecture 19
+- [Networking and Multiplayer (Docs Main Page)](https://docs.unrealengine.com/en-US/Gameplay/Networking/index.html)
+- [Networking Overview](https://docs.unrealengine.com/5.0/en-US/networking-overview-for-unreal-engine/)
+- [Property Replication](https://docs.unrealengine.com/5.0/en-US/property-replication-in-unreal-engine/)
+- [RPCs](https://docs.unrealengine.com/5.0/en-US/rpcs-in-unreal-engine/)
+

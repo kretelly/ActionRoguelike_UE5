@@ -16,6 +16,8 @@ AARogTargetDummy::AARogTargetDummy()
 
 	AttributeComp = CreateDefaultSubobject<UARogAttributeComponent>("AttributeComp");
 	AttributeComp->ParamChangeDelegate.AddDynamic(this, &AARogTargetDummy::OnParamChange);
+
+	//SetReplicates(true); // Allow this actor replicate
 }
 
 void AARogTargetDummy::OnParamChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta)
@@ -23,7 +25,7 @@ void AARogTargetDummy::OnParamChange(AActor* InstigatorActor, UARogAttributeComp
 	// Default Values
 	// UARogAttributeComponent* AttrComp = Cast<UARogAttributeComponent>(AttributeComp->GetClass()->GetDefaultObject());
 	// float DefaultHealth = AttrComp->Health; // The variable should be public
-	
+
 	if (bCanPlayDissolve)
 	{
 		//float DissolveValue = 1 - (NewHealth/DefaultHealth); // Node: 1-x

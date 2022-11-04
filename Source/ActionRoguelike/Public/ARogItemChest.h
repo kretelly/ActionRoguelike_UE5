@@ -39,7 +39,11 @@ protected:
 	UParticleSystemComponent* ParticleSysComp;
 
 	// Lid status
+	UPROPERTY(ReplicatedUsing="OnRep_LidOpened") // RepNotify
 	bool bIsLidOpen;
+
+	UFUNCTION()
+	void OnRep_LidOpened();
 
 	// Timeline
 	UPROPERTY(VisibleAnywhere)
@@ -56,5 +60,8 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// This fuction replicate variables
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 };

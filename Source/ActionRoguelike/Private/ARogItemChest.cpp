@@ -4,6 +4,7 @@
 #include "ARogItemChest.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AARogItemChest::AARogItemChest()
@@ -25,6 +26,8 @@ AARogItemChest::AARogItemChest()
 	ParticleSysComp->bAutoActivate = false;
 
 	TimelineComp = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineComp"));
+
+	SetReplicates(true); // Allow this actor replicate
 }
 
 // Called when the game starts or when spawned
@@ -48,19 +51,8 @@ void AARogItemChest::BeginPlay()
 
 void AARogItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	if (!TimelineComp->IsPlaying())
-	{
-		if (!bIsLidOpen)
-		{
-			TimelineComp->Play();
-			bIsLidOpen = true;
-		}	
-		else
-		{
-			TimelineComp->Reverse();
-			bIsLidOpen = false;
-		}
-	}
+	bIsLidOpen = !bIsLidOpen; // Every time this value change the OnRep_LidOpened() will be called on Client.
+	OnRep_LidOpened(); // Calling RepNotify on Server.
 }
 
 void AARogItemChest::ToggleChestLid(float Output)
@@ -74,7 +66,27 @@ void AARogItemChest::OnEventFinish()
 	{
 		ParticleSysComp->Activate();
 	}
-
 	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Red, "Fire Sound");
 }
 
+void AARogItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	// Args -> (Class, Variable)
+	DOREPLIFETIME(AARogItemChest, bIsLidOpen);
+}
+
+void AARogItemChest::OnRep_LidOpened()
+{
+	if (!TimelineComp->IsPlaying())
+	{
+		if (bIsLidOpen)
+		{
+			TimelineComp->Play();
+		}
+		else
+		{
+			TimelineComp->Reverse();
+		}
+	}
+}

@@ -24,7 +24,13 @@ void UARogInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FindBestInteractable();
+	// This function will only be called locally by the owner, only the responsable by the input will call this function.
+	// Avoid it be called every time by everyone in a multiplayer through RPC.
+	APawn* Pawn = Cast<APawn>(GetOwner());
+	if (Pawn->IsLocallyControlled())
+	{
+		FindBestInteractable();
+	}
 }
 
 void UARogInteractionComponent::FindBestInteractable()
@@ -126,12 +132,17 @@ void UARogInteractionComponent::FindBestInteractable()
 
 void UARogInteractionComponent::PrimaryInteract()
 {
-	if (FocusedActor == nullptr)
+	ServerInteract(FocusedActor);
+}
+
+void UARogInteractionComponent::ServerInteract_Implementation(AActor* InFocus)
+{
+	if (InFocus == nullptr)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "No Focus Actor to interact.");
 		return;
 	}
 
 	APawn* Pawn = Cast<APawn>(GetOwner());
-	IARogGameplayInterface::Execute_Interact(FocusedActor, Pawn);
+	IARogGameplayInterface::Execute_Interact(InFocus, Pawn);
 }
