@@ -167,6 +167,12 @@ void AARogCharacter::ToggleParry()
 
 void AARogCharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta)
 {
+	// Handles rage
+	if (Delta < 0.0f) 
+	{
+		AttributeComp->ApplyRage(InstigatorActor, FMath::Abs(Delta));
+	} 
+
 	if (NewHealth <= 0)
 	{		
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision); // Avoid get stuck on dead pawn and also avoid multiplies spawn.

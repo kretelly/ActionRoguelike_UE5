@@ -16,6 +16,9 @@ AARogPowerup::AARogPowerup()
 	MeshComp->SetupAttachment(RootComponent);
 
 	RespawnTime = 10.0f;
+
+	// Allow replicate when spawned during gameplay
+	SetReplicates(true); 
 }
 
 void AARogPowerup::Interact_Implementation(APawn* InstigatorPawn)

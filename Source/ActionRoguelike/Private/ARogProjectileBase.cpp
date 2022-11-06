@@ -44,6 +44,9 @@ AARogProjectileBase::AARogProjectileBase()
 	// Camera Shake
 	ImpactShakeInnerRadius = 0.0f;
 	ImpactShakeOuterRadius = 1500.0f;
+
+	// Allow replicate when spawned during gameplay
+	SetReplicates(true);
 }
 
 // Called when the game starts or when spawned

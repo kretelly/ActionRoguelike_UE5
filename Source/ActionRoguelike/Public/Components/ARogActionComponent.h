@@ -33,7 +33,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Actions")
 	bool StopActionByName(AActor* Instigator, FName ActionName);
 
+	// Check if some actor already have a specific action!
+	bool HasAction(TSubclassOf<UARogActionObject> ActionClass);
+
 protected:
+
+	UFUNCTION(Server, Reliable)
+	void ServerStartAction(AActor* Instigator, FName ActionName);
 
 	/* Granted abilities at game start */
 	UPROPERTY(EditAnywhere, Category = "Actions")

@@ -8,6 +8,9 @@
 UARogActionComponent::UARogActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
+	// Allow Actor Components be replicated
+	SetIsReplicatedByDefault(true);
 }
 
 void UARogActionComponent::BeginPlay()
@@ -65,6 +68,12 @@ bool UARogActionComponent::StartActionByName(AActor* Instigator, FName ActionNam
 				continue;
 			}
 
+			// Is Client?
+			if (!GetOwner()->HasAuthority())
+			{
+				ServerStartAction(Instigator, ActionName);
+			}
+
 			Action->StartAction(Instigator);
 			return true;
 		}
@@ -86,4 +95,21 @@ bool UARogActionComponent::StopActionByName(AActor* Instigator, FName ActionName
 		}
 	}
 	return false;
+}
+
+bool UARogActionComponent::HasAction(TSubclassOf<UARogActionObject> ActionClass)
+{
+	for (UARogActionObject* Action : Actions)
+	{
+		if (Action && Action->IsA(ActionClass))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void UARogActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
+{
+	StartActionByName(Instigator, ActionName);
 }

@@ -20,6 +20,7 @@ void UARogInteractionComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
+// Tick runs at client and server
 void UARogInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);

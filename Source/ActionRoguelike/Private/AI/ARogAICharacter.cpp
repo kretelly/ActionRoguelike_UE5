@@ -94,8 +94,21 @@ void AARogAICharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCom
 
 void AARogAICharacter::OnPawnSeen(APawn* Pawn)
 {
-    SetTargetActor(Pawn);
-    DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::White, 4.0f, true);
+    // Ignore if target already set
+    if (GetTargetActor() != Pawn)
+    {
+        SetTargetActor(Pawn);
+        
+        UARogWorldUserWidget* AlertWidget = CreateWidget<UARogWorldUserWidget>(GetWorld(), SpottedWidgetClass);
+        if (AlertWidget)
+        {
+            AlertWidget->AttachedActor = this;
+            // Index of 10 (or anything higher than default of 0) places this on top of any other widget.
+            // May end up behind the minion health bar otherwise.
+            AlertWidget->AddToViewport(10);
+        }
+    }
+    //DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::White, 4.0f, true);
 }
 
 void AARogAICharacter::SetTargetActor(AActor* NewTarget)
@@ -103,7 +116,7 @@ void AARogAICharacter::SetTargetActor(AActor* NewTarget)
     AAIController* AIController = Cast<AAIController>(GetController());
     if (AIController)
     {
-        // This check avoid it shot another AI Character
+        // This check avoid it shot another AI Character on purpose
         if (Cast<AARogCharacter>(NewTarget))
         {
             //UBlackboardComponent* BlackboardComp = Cast<UBlackboardComponent>(AIController->GetBlackboardComponent());
@@ -113,3 +126,12 @@ void AARogAICharacter::SetTargetActor(AActor* NewTarget)
     }
 }
 
+AActor* AARogAICharacter::GetTargetActor() const
+{
+    AAIController* AIC = Cast<AAIController>(GetController());
+    if (AIC)
+    {
+        return Cast<AActor>(AIC->GetBlackboardComponent()->GetValueAsObject("TargetActor"));
+    }
+    return nullptr;
+}

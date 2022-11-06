@@ -6,7 +6,11 @@
 #include "Components/ActorComponent.h"
 #include "ARogAttributeComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChange, AActor*, InstigatorActor, UARogAttributeComponent*, OwningComp, float, NewHealth, float, Delta);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatorActor, UARogAttributeComponent*, OwningComp, float, NewHealth, float, Delta);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnRageChanged, AActor*, InstigatorActor, USAttributeComponent*, OwningComp, float, NewRage, float, Delta);
+
+// Alternative: Share the same signature with generic names
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttributeChanged, AActor*, InstigatorActor, UARogAttributeComponent*, OwningComp, float, NewValue, float, Delta);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API UARogAttributeComponent : public UActorComponent
@@ -35,16 +39,35 @@ protected:
 	// --
 	// Category = "" - display only for detail panels and blueprint context menu.
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attibutes)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = Attibutes)
 	float Health;
 
-	UPROPERTY(BlueprintReadOnly, Category = Attibutes)
+	UPROPERTY(BlueprintReadOnly, Replicated, Category = Attibutes)
 	float HealthMax;
+
+	/* Resource used to power certain Actions */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float Rage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float RageMax;
+
+	UFUNCTION(NetMulticast, Reliable) // @FIXME: mark as unreliable once we moved the 'state' our of scharacter
+	void MulticastHealthChanged(AActor* InstigatorActor, float NewHealth, float Delta);
 
 public:
 
-	UPROPERTY(BlueprintAssignable)
-	FOnHealthChange HealthChangeDelegate;
+	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	FOnAttributeChanged HealthChangeDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Attributes")
+	FOnAttributeChanged OnRageChangeDelegate;
+
+	// Dummy Actor -> used to change scalar parameters using event dispatcher
+	FOnAttributeChanged ParamChangeDelegate;
+
+	UFUNCTION(BlueprintCallable)
+	bool Kill(AActor* InstigatorActor);
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const; // Add the const make the BlueprintCallable pure function.
@@ -61,10 +84,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool ApplyHealthChange(AActor* InstigatorActor,float Delta);
 
-	// Dummy Actor -> used to change scalar parameters using event dispatcher
-	FOnHealthChange ParamChangeDelegate;
-
 	UFUNCTION(BlueprintCallable)
-	bool Kill(AActor* InstigatorActor);
+	float GetRage() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool ApplyRage(AActor* InstigatorActor, float Delta);
 	
 };

@@ -69,9 +69,12 @@ void AARogItemChest::OnEventFinish()
 	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Red, "Fire Sound");
 }
 
+// Everytime we replicate any varibale we should override this function
+// There is no need to specify this function in our header file, because it is included in our .generated.h file
 void AARogItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
 	// Args -> (Class, Variable)
 	DOREPLIFETIME(AARogItemChest, bIsLidOpen);
 }

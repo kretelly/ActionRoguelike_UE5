@@ -40,8 +40,14 @@ protected:
 	void OnHealthChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta);
 
 	void SetTargetActor(AActor* NewTarget);
+	
+	AActor* GetTargetActor() const;
 
 	UARogWorldUserWidget* ActiveHealthBar;
+	
+	/* Widget to display when bot first sees a player. */
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> SpottedWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = UI)
 	TSubclassOf<UARogWorldUserWidget> HealthBarWidgetClass;
