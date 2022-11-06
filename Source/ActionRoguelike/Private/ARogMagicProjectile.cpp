@@ -15,7 +15,7 @@ AARogMagicProjectile::AARogMagicProjectile()
 {
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &AARogMagicProjectile::OnActorBeginOverlap);
 	Projectile->InitialSpeed = 3000.0f;
-	DamageAmount = 20.0f;
+	DamageAmount = 25.0f;
 }
 
 void AARogMagicProjectile::PostInitializeComponents()

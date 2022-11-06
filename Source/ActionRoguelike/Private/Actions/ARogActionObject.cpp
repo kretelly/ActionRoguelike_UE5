@@ -3,7 +3,8 @@
 
 #include "Actions/ARogActionObject.h"
 #include "Components/ARogActionComponent.h"
-
+#include "Net/UnrealNetwork.h"
+#include "../ActionRoguelike.h"
 
 bool UARogActionObject::CanStart_Implementation(AActor* Instigator)
 {
@@ -23,7 +24,8 @@ bool UARogActionObject::CanStart_Implementation(AActor* Instigator)
 
 void UARogActionObject::StartAction_Implementation(AActor* Instigator)
 {
-	UE_LOG(LogTemp, Log, TEXT("Started: %s"), *GetNameSafe(this));
+	//UE_LOG(LogTemp, Log, TEXT("Started: %s"), *GetNameSafe(this));
+	LogOnScreen(this, FString::Printf(TEXT("Started: %s"), *ActionName.ToString()), FColor::Green);
 
 	UARogActionComponent* ActionComp = GetOwningComponent();
 	ActionComp->ActiveGameplayTags.AppendTags(GrantsTags);
@@ -33,7 +35,8 @@ void UARogActionObject::StartAction_Implementation(AActor* Instigator)
 
 void UARogActionObject::StopAction_Implementation(AActor* Instigator)
 {
-	UE_LOG(LogTemp, Log, TEXT("Stopped: %s"), *GetNameSafe(this));
+	//UE_LOG(LogTemp, Log, TEXT("Stopped: %s"), *GetNameSafe(this));
+	LogOnScreen(this, FString::Printf(TEXT("Stopped: %s"), *ActionName.ToString()), FColor::White);
 
 	ensureAlways(bIsRunning);
 
@@ -46,6 +49,7 @@ void UARogActionObject::StopAction_Implementation(AActor* Instigator)
 UWorld* UARogActionObject::GetWorld() const
 {
 	// Outer is set when creating action via NewObject<T>
+	// AActor* Actor = Cast<AActor>(GetOuter()); -> It could be an AActor for instance if I specify on New UObject declaration.
 	UARogActionComponent* ActionComp = Cast<UARogActionComponent>(GetOuter()); // We have setted Outer in Action Component -> AddAction().
 	if (ActionComp)
 	{
@@ -64,3 +68,22 @@ bool UARogActionObject::IsRunning() const
 	return bIsRunning;
 }
 
+void UARogActionObject::OnRep_IsRunning()
+{
+	// TODO: Set correct instigator.
+	if (bIsRunning)
+	{
+		StartAction(nullptr);
+	}
+	else
+	{
+		StopAction(nullptr);
+	}
+}
+
+void UARogActionObject::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UARogActionObject, bIsRunning);
+}

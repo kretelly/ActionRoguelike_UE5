@@ -15,6 +15,8 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Unreal Engine Docs: Site Map](https://docs.unrealengine.com/4.27/en-US/SiteIndex/)
 - [Unreal Engine Forums](https://forums.unrealengine.com/)
 - [Community Wiki](https://unrealcommunity.wiki/)
+- [Unreal Directive - Quality Unreal Engine Resources](https://www.unrealdirective.com/)
+- [An Unreal Engine Blog](https://cedric-neukirchen.net/)
 - [Discord Community: Unreal Slackers](https://unrealslackers.org/)
 
 ## Lecture 2
@@ -138,3 +140,12 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Property Replication](https://docs.unrealengine.com/5.0/en-US/property-replication-in-unreal-engine/)
 - [RPCs](https://docs.unrealengine.com/5.0/en-US/rpcs-in-unreal-engine/)
 
+## Lecture 20
+- [Network Compendium](https://unrealcommunity.wiki/network-compendium-f6ca27)
+- [Multiplayer in Blueprints](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Blueprints/)
+- [Blueprint Networking Tutorials](https://www.unrealengine.com/en-US/blog/blueprint-networking-tutorials)
+
+## Lecture 21
+- [Property Replication](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Actors/Properties/)
+- [Conditional Property Replication](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Actors/Properties/Conditions/)
+- [Replicating object references](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Actors/Properties/ObjectReferences/)

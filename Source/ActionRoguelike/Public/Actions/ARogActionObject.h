@@ -31,7 +31,11 @@ protected:
 	FGameplayTagContainer BlockedTags;
 
 	// Track if we are running any attack / ability
+	UPROPERTY(ReplicatedUsing = "OnRep_IsRunning")
 	bool bIsRunning;
+
+	UFUNCTION()
+	void OnRep_IsRunning();
 
 public:
 
@@ -48,7 +52,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	void StartAction(AActor* Instigator);
 
-	UFUNCTION(BlueprintNativeEvent, Category = "Action")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	void StopAction(AActor* Instigator);
 	
 	/* Action nickname to start/stop without a reference to the object */
@@ -57,5 +61,11 @@ public:
 
 	// We have to override this function to be possible to call it and also its functions from Blueprint, since this class is a UObject.
 	UWorld* GetWorld() const override;
+
+	// Override this function from UObject allow UObject be replicated
+	bool IsSupportedForNetworking() const override
+	{
+		return true;
+	}
 
 };

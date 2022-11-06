@@ -73,10 +73,10 @@ void AARogAICharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCom
             }
 
             // Stop Behavior Tree
-            AAIController* AIController = Cast<AAIController>(GetController());
-            if (AIController)
+            AAIController* AIC = Cast<AAIController>(GetController());
+            if (AIC)
             {
-                AIController->GetBrainComponent()->StopLogic("Killed");
+                AIC->GetBrainComponent()->StopLogic("Killed");
             }
 
             // Ragdoll Collision

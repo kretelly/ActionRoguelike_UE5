@@ -43,14 +43,17 @@ protected:
 
 	/* Granted abilities at game start */
 	UPROPERTY(EditAnywhere, Category = "Actions")
-	TArray<TSubclassOf<UARogActionObject>> DefaultActions; // Array of actions that the main character can play.
+	TArray<TSubclassOf<UARogActionObject>> DefaultActions; // Array of actions that player can play.
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	TArray<UARogActionObject*> Actions; //TODO: Improve to TMap in the future
 
 	virtual void BeginPlay() override;
 
 public:	
+	// This function allow ActorComponent replicate UObjects, it's useful to replicate array and so on.
+	bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 };
