@@ -179,6 +179,8 @@ void AARogCharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCompo
 
 		APlayerController* PC = Cast<APlayerController>(GetController());
 		DisableInput(PC);
+
+		SetLifeSpan(3.0f);
 	}
 }
 

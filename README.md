@@ -149,3 +149,5 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Property Replication](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Actors/Properties/)
 - [Conditional Property Replication](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Actors/Properties/Conditions/)
 - [Replicating object references](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Actors/Properties/ObjectReferences/)
+
+## Lecture 22

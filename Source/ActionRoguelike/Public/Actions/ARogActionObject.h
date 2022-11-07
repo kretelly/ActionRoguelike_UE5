@@ -9,6 +9,21 @@
 
 class UWorld;
 class UARogActionComponent;
+
+// The advantage of using struct is the fact of all data inside it goes in one pack, which avoid errors.
+USTRUCT()
+struct FActionRepData
+{
+	GENERATED_BODY()
+public:
+
+	UPROPERTY()
+	bool bIsRunning;
+
+	UPROPERTY()
+	AActor* Instigator;
+};
+
 /**
  * 
  */
@@ -31,11 +46,11 @@ protected:
 	FGameplayTagContainer BlockedTags;
 
 	// Track if we are running any attack / ability
-	UPROPERTY(ReplicatedUsing = "OnRep_IsRunning")
-	bool bIsRunning;
+	UPROPERTY(ReplicatedUsing = "OnRep_RepData")
+	FActionRepData RepData;
 
 	UFUNCTION()
-	void OnRep_IsRunning();
+	void OnRep_RepData();
 
 public:
 

@@ -24,10 +24,14 @@ void UARogActionProjectileAttack::StartAction_Implementation(AActor* Instigator)
 		Character->PlayAnimMontage(AttackAnim);
 		UGameplayStatics::SpawnEmitterAttached(CastingEffect, Character->GetMesh(), HandSocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget);
 
-		FTimerHandle AttackTimerHandle;
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindUFunction(this, "AttackTimerElapsed", Character);
-		GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, TimerDelegate, AttackAnimDelay, false);
+		// Only the server can spawn the projectile, this avoid spawn the projectile twice.
+		if (Character->HasAuthority())
+		{
+			FTimerHandle AttackTimerHandle;
+			FTimerDelegate TimerDelegate;
+			TimerDelegate.BindUFunction(this, "AttackTimerElapsed", Character);
+			GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, TimerDelegate, AttackAnimDelay, false);
+		}
 	}
 }
 

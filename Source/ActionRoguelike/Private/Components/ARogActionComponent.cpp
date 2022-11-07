@@ -40,11 +40,8 @@ void UARogActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
  	{
 		FColor TextColor = Action->IsRunning() ? FColor::Blue : FColor::White;
 
-		FString ActionMsg = FString::Printf(TEXT("[%s] Action: %s, IsRunning: %s, Outer: %s"),
-			*GetNameSafe(GetOwner()),
-			*Action->ActionName.ToString(),
-			Action->IsRunning() ? TEXT("True") : TEXT("False"),
-			*GetNameSafe(Action->GetOuter()));
+		//FString ActionMsg = FString::Printf(TEXT("[%s] Action: %s, IsRunning: %s, Outer: %s"),*GetNameSafe(GetOwner()),*Action->ActionName.ToString(),Action->IsRunning() ? TEXT("True") : TEXT("False"),*GetNameSafe(Action->GetOuter()));
+		FString ActionMsg = FString::Printf(TEXT("[%s] Action: %s"), *GetNameSafe(GetOwner()), *GetNameSafe(Action));
 
 		LogOnScreen(this, ActionMsg, TextColor, 0.0f);
  	}
@@ -54,6 +51,12 @@ void UARogActionComponent::AddAction(AActor* Instigator, TSubclassOf<UARogAction
 {
 	if (ActionClass == nullptr)
 	{
+		return;
+	}
+
+	// Only server can add action
+	if(!GetOwner()->HasAuthority())
+	{ 
 		return;
 	}
 
@@ -110,6 +113,12 @@ bool UARogActionComponent::StopActionByName(AActor* Instigator, FName ActionName
 		{
 			if (Action->IsRunning())
 			{
+				// Is Client?
+				if (!GetOwner()->HasAuthority())
+				{
+					ServerStopAction(Instigator, ActionName);
+				}
+
 				Action->StopAction(Instigator);
 				return true;
 			}
@@ -133,6 +142,11 @@ bool UARogActionComponent::HasAction(TSubclassOf<UARogActionObject> ActionClass)
 void UARogActionComponent::ServerStartAction_Implementation(AActor* Instigator, FName ActionName)
 {
 	StartActionByName(Instigator, ActionName);
+}
+
+void UARogActionComponent::ServerStopAction_Implementation(AActor* Instigator, FName ActionName)
+{
+	StopActionByName(Instigator, ActionName);
 }
 
 // This function allow ActorComponent replicate UObjects, it's useful to replicate array and so on.

@@ -57,30 +57,33 @@ bool UARogAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float D
 		Delta *= DamageMultiplier;
 	}
 
-	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
-
-	//HealthChangeDelegate.Broadcast(InstigatorActor, this, Health, Delta);
-	//ParamChangeDelegate.Broadcast(InstigatorActor, this, Health, Delta); // Target Dummy
-
-	// It replicates the dispatcher Events
-	MulticastHealthChanged(InstigatorActor, Health, Delta);
-
-	// Hit Flash -> This code could be added in OnHealthChange Event at our custom ACharacter class.
-	ACharacter* Character = Cast<ACharacter>(GetOwner());
-	if (Character && UARogAttributeComponent::IsActorAlive(Character))
+	if (GetOwner()->HasAuthority())
 	{
-		FColor Color = FColor::Orange;
-		Character->GetMesh()->SetVectorParameterValueOnMaterials("HitFlashColor", FVector(Color));
-		Character->GetMesh()->SetScalarParameterValueOnMaterials("HitFlashTime", GetWorld()->TimeSeconds);
-	}
+		Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 
-	// Died -> this handles respawn!
-	if (Health <= 0.0f)
-	{
-		AARogGameModeBase* GM = GetWorld()->GetAuthGameMode<AARogGameModeBase>();
-		if(GM)
+		//HealthChangeDelegate.Broadcast(InstigatorActor, this, Health, Delta);
+		//ParamChangeDelegate.Broadcast(InstigatorActor, this, Health, Delta); // Target Dummy
+
+		// It replicates the dispatcher Events
+		MulticastHealthChanged(InstigatorActor, Health, Delta);
+
+		// Hit Flash -> This code could be added in OnHealthChange Event at our custom ACharacter class.
+		ACharacter* Character = Cast<ACharacter>(GetOwner());
+		if (Character && UARogAttributeComponent::IsActorAlive(Character))
 		{
-			GM->OnActorKilled(GetOwner(), InstigatorActor);
+			FColor Color = FColor::Orange;
+			Character->GetMesh()->SetVectorParameterValueOnMaterials("HitFlashColor", FVector(Color));
+			Character->GetMesh()->SetScalarParameterValueOnMaterials("HitFlashTime", GetWorld()->TimeSeconds);
+		}
+
+		// Died -> this handles respawn!
+		if (Health <= 0.0f)
+		{
+			AARogGameModeBase* GM = GetWorld()->GetAuthGameMode<AARogGameModeBase>();
+			if (GM)
+			{
+				GM->OnActorKilled(GetOwner(), InstigatorActor);
+			}
 		}
 	}
 

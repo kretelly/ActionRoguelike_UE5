@@ -55,7 +55,7 @@ void AARogMagicProjectile::OnActorBeginOverlap(UPrimitiveComponent* OverlappedCo
 				Explode();
 
 				// Add Buff
-				if (ActionComp)
+				if (ActionComp && HasAuthority())
 				{
 					ActionComp->AddAction(GetOwner(), BurningActionClass);
 				}
