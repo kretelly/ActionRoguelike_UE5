@@ -18,6 +18,8 @@ class ACTIONROGUELIKE_API AARogItemChest : public AActor, public IARogGameplayIn
 
 	void Interact_Implementation(APawn* InstigatorPawn);
 	
+	void OnActorLoaded_Implementation();
+	
 public:	
 	// Sets default values for this actor's properties
 	AARogItemChest();
@@ -39,7 +41,7 @@ protected:
 	UParticleSystemComponent* ParticleSysComp;
 
 	// Lid status
-	UPROPERTY(ReplicatedUsing="OnRep_LidOpened") // RepNotify
+	UPROPERTY(ReplicatedUsing="OnRep_LidOpened", SaveGame) // RepNotify
 	bool bIsLidOpen;
 
 	UFUNCTION()

@@ -10,6 +10,7 @@
 class UEnvQuery;
 class UEnvQueryInstanceBlueprintWrapper;
 class UCurveFloat;
+class UARogSaveGame;
 
 /**
  * 
@@ -72,9 +73,23 @@ public:
 
 	AARogGameModeBase();
 
+	void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
+	void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
+
 	virtual void StartPlay() override;
 
 	UFUNCTION(Exec)
 	void KillAll();
 
+	// Save Game logic goes down below
+	UFUNCTION(BlueprintCallable, Category = "SaveGame")
+	void WriteSaveGame();
+
+	void LoadSaveGame();
+
+	FString SlotName;
+
+	UPROPERTY()
+	UARogSaveGame* CurrentSaveGame;
 };

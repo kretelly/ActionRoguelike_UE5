@@ -8,6 +8,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCreditsChanged, AARogPlayerState*, PlayerState, int32, NewCredits, int32, Delta);
 
+class UARogSaveGame;
+
 /**
  * 
  */
@@ -34,5 +36,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnCreditsChanged OnCreditsChanged;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void SavePlayerState(UARogSaveGame* SaveObject);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void LoadPlayerState(UARogSaveGame* SaveObject);
 
 };

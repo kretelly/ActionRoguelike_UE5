@@ -9,6 +9,11 @@
 #include "ARogPlayerState.h"
 #include "ARogCharacter.h"
 #include "EngineUtils.h"
+#include "Kismet/GameplayStatics.h"
+#include "Save/ARogSaveGame.h"
+#include "GameFramework/GameStateBase.h"
+#include "ARogGameplayInterface.h"
+#include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
 // Creating our console variable to control the spawn bot
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ARog.SpawnBots"), true, TEXT("Toggle spawn bots rate!"), EConsoleVariableFlags::ECVF_Cheat);
@@ -22,6 +27,23 @@ AARogGameModeBase::AARogGameModeBase()
 	RequiredPowerupDistance = 2000;
 
 	PlayerStateClass = AARogPlayerState::StaticClass();
+
+	SlotName = "SaveGame01";
+}
+
+void AARogGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+	/**
+	* 
+	* The load transform will not property work in Actor with bIsSpatiallyLoaded setted as true
+	* because it may not be available when the InitGame() is called in level with World Partition enabled
+	* One way to handle that or work around is use the postload functions of our actor and implement some logic.
+	* 
+	* https://courses.tomlooman.com/courses/1320807/lectures/35211646/comments/16776540
+	*/
+	LoadSaveGame();
 }
 
 void AARogGameModeBase::StartPlay()
@@ -41,6 +63,18 @@ void AARogGameModeBase::StartPlay()
 		{
 			QueryInstance->GetOnQueryFinishedEvent().AddDynamic(this, &AARogGameModeBase::OnPowerupSpawnQueryCompleted);
 		}
+	}
+}
+
+// This function it is very helpful when it comes to multiplayer
+void AARogGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+
+	AARogPlayerState* PS = NewPlayer->GetPlayerState<AARogPlayerState>();
+	if (PS)
+	{
+		PS->LoadPlayerState(CurrentSaveGame);
 	}
 }
 
@@ -219,3 +253,96 @@ void AARogGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 	}
 }
 
+void AARogGameModeBase::WriteSaveGame()
+{
+	// Iterate all player states, we don't have proper ID to match yet (requires Steam or EOS)
+	for (int32 i = 0; i < GameState->PlayerArray.Num(); i++)
+	{
+		AARogPlayerState* PS = Cast<AARogPlayerState>(GameState->PlayerArray[i]);
+		if (PS)
+		{
+			PS->SavePlayerState(CurrentSaveGame);
+			break; // single player only at this point
+		}
+	}
+
+	CurrentSaveGame->SavedActors.Empty();
+
+	// Iterate the entire world of actors
+	for (FActorIterator It(GetWorld()); It; ++It)
+	{
+		AActor* Actor = *It;
+		
+		// Only interested in our 'gameplay actors'
+		if (!Actor->Implements<UARogGameplayInterface>())
+		{
+			continue;
+		}
+
+		FActorSaveData ActorData;
+		ActorData.ActorName = Actor->GetName();
+		ActorData.Transform = Actor->GetActorTransform();
+
+		// Serializing variables marked as UPROPERTY(SaveGame) down below
+		FMemoryWriter MemWriter(ActorData.ByteData); // Pass the array to fill with data from Actor
+		FObjectAndNameAsStringProxyArchive Archive(MemWriter, true);
+		Archive.ArIsSaveGame = true; // Find only variables with UPROPERTY(SaveGame)
+		Actor->Serialize(Archive); // Converts Actor's SaveGame UPROPERTIES into binary array
+
+		// Add the actor to the saved Actor's Array
+		CurrentSaveGame->SavedActors.Add(ActorData);
+	}
+
+	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
+
+}
+
+void AARogGameModeBase::LoadSaveGame()
+{
+	if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
+	{
+		CurrentSaveGame = Cast<UARogSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
+
+		if (CurrentSaveGame == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to load SaveGame Data."));
+			return;
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("Loaded SaveGame Data."));
+
+		// Iterate the entire world of actors
+		for (FActorIterator It(GetWorld()); It; ++It)
+		{
+			AActor* Actor = *It;
+			// Only interested in our 'gameplay actors'
+			if (!Actor->Implements<UARogGameplayInterface>())
+			{
+				continue;
+			}
+
+			for (FActorSaveData ActorData : CurrentSaveGame->SavedActors)
+			{
+				if (ActorData.ActorName == Actor->GetName())
+				{
+					Actor->SetActorTransform(ActorData.Transform);
+					
+					// Unserializing variables marked as UPROPERTY(SaveGame) down below
+					FMemoryReader MemReader(ActorData.ByteData); // Pass the array to get all stored data from Actor
+					FObjectAndNameAsStringProxyArchive Archive(MemReader, true);
+					Archive.ArIsSaveGame = true; // Find only variables with UPROPERTY(SaveGame)
+					Actor->Serialize(Archive); // Convert binary array back into actor's variables
+
+					IARogGameplayInterface::Execute_OnActorLoaded(Actor);
+
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		CurrentSaveGame = Cast<UARogSaveGame>(UGameplayStatics::CreateSaveGameObject(UARogSaveGame::StaticClass()));
+		//UE_LOG(LogTemp, Log, TEXT("Created New SaveGame Data."));
+	}
+}

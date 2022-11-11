@@ -151,3 +151,13 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Replicating object references](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/Networking/Actors/Properties/ObjectReferences/)
 
 ## Lecture 22
+
+## Lecture 23
+- [Saving and Loading Your Game](https://docs.unrealengine.com/4.27/en-US/InteractiveExperiences/SaveGame/)
+- [World Partition](https://docs.unrealengine.com/5.0/en-US/world-partition-in-unreal-engine/)
+- [Steve's Persistent Unreal Data library](https://github.com/sinbad/SPUD)
+- [Properties | UPROPERTY(SaveGame)](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/GameplayArchitecture/Properties/)
+- [UPROPERTY](https://unrealcommunity.wiki/uproperty-0cj0ai46)
+- [SaveGame Pointers and Structs](https://unrealcommunity.wiki/savegame-pointers-and-structs-8wlg0qms)
+- [Saving/Loading Array of Object (Answerhub)](https://forums.unrealengine.com/t/what-is-the-best-way-to-handle-saving-loading-an-array-of-objects/281775/2)
+- [UGameUserSettings](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Engine/GameFramework/UGameUserSettings/)

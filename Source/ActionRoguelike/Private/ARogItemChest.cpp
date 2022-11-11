@@ -13,6 +13,7 @@ AARogItemChest::AARogItemChest()
 	PrimaryActorTick.bCanEverTick = true;
 
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh");
+	BaseMesh->SetSimulatePhysics(true);
 	SetRootComponent(BaseMesh);
 
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>("LidMesh");
@@ -27,7 +28,13 @@ AARogItemChest::AARogItemChest()
 
 	TimelineComp = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineComp"));
 
+	// World Partition
+	bIsSpatiallyLoaded = false;
+	//SetIsSpatiallyLoaded(false);
+
 	SetReplicates(true); // Allow this actor replicate
+	SetReplicateMovement(true); // Save Game Replicates
+	BaseMesh->SetIsReplicated(true); // Save Game Replicates
 }
 
 // Called when the game starts or when spawned
@@ -53,6 +60,11 @@ void AARogItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
 	bIsLidOpen = !bIsLidOpen; // Every time this value change the OnRep_LidOpened() will be called on Client.
 	OnRep_LidOpened(); // Calling RepNotify on Server.
+}
+
+void AARogItemChest::OnActorLoaded_Implementation()
+{
+	OnRep_LidOpened();
 }
 
 void AARogItemChest::ToggleChestLid(float Output)
