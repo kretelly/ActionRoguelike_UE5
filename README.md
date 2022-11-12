@@ -161,3 +161,9 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [SaveGame Pointers and Structs](https://unrealcommunity.wiki/savegame-pointers-and-structs-8wlg0qms)
 - [Saving/Loading Array of Object (Answerhub)](https://forums.unrealengine.com/t/what-is-the-best-way-to-handle-saving-loading-an-array-of-objects/281775/2)
 - [UGameUserSettings](https://docs.unrealengine.com/4.27/en-US/API/Runtime/Engine/GameFramework/UGameUserSettings/)
+
+## Lecture 24
+- [Widget Type Reference](https://docs.unrealengine.com/5.0/en-US/widget-type-reference-for-umg-ui-designer-in-unreal-engine/)
+- [UMG Styling](https://docs.unrealengine.com/5.0/en-US/umg-styling-in-unreal-engine/)
+- [UMG Best Practices](https://docs.unrealengine.com/5.0/en-US/umg-best-practices-in-unreal-engine/)
+- [Text Formatting and Fonts](https://docs.unrealengine.com/5.0/en-US/text-formatting-and-fonts-in-umg-for-unreal-engine/)

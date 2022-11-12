@@ -99,16 +99,21 @@ void AARogAICharacter::OnPawnSeen(APawn* Pawn)
     {
         SetTargetActor(Pawn);
         
-        UARogWorldUserWidget* AlertWidget = CreateWidget<UARogWorldUserWidget>(GetWorld(), SpottedWidgetClass);
-        if (AlertWidget)
-        {
-            AlertWidget->AttachedActor = this;
-            // Index of 10 (or anything higher than default of 0) places this on top of any other widget.
-            // May end up behind the minion health bar otherwise.
-            AlertWidget->AddToViewport(10);
-        }
+        MulticastPawnSeen();
     }
     //DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER SPOTTED", nullptr, FColor::White, 4.0f, true);
+}
+
+void AARogAICharacter::MulticastPawnSeen_Implementation()
+{
+    UARogWorldUserWidget* AlertWidget = CreateWidget<UARogWorldUserWidget>(GetWorld(), SpottedWidgetClass);
+    if (AlertWidget)
+    {
+        AlertWidget->AttachedActor = this;
+        // Index of 10 (or anything higher than default of 0) places this on top of any other widget.
+        // May end up behind the minion health bar otherwise.
+        AlertWidget->AddToViewport(10);
+    }
 }
 
 void AARogAICharacter::SetTargetActor(AActor* NewTarget)

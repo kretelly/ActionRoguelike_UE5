@@ -140,6 +140,11 @@ void UARogAttributeComponent::MulticastHealthChanged_Implementation(AActor* Inst
 	ParamChangeDelegate.Broadcast(InstigatorActor, this, NewHealth, Delta); // Target Dummy
 }
 
+void UARogAttributeComponent::MulticastRageChanged_Implementation(AActor* InstigatorActor, float NewRage, float Delta)
+{
+	OnRageChangeDelegate.Broadcast(InstigatorActor, this, NewRage, Delta);
+}
+
 // Everytime we replicate any varibale we should override this function
 // There is no need to specify this function in our header file, because it is included in our .generated.h file
 void UARogAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -149,4 +154,7 @@ void UARogAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimePropert
 	DOREPLIFETIME(UARogAttributeComponent, Health);
 	DOREPLIFETIME(UARogAttributeComponent, HealthMax);	
 	//DOREPLIFETIME_CONDITION(UARogAttributeComponent, HealthMax, ELifetimeCondition::COND_OwnerOnly);
+
+	DOREPLIFETIME(UARogAttributeComponent, Rage);
+	DOREPLIFETIME(UARogAttributeComponent, RageMax);
 }

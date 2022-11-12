@@ -2,6 +2,7 @@
 
 #include "ARogPowerup.h"
 #include "Components/SphereComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AARogPowerup::AARogPowerup()
@@ -33,15 +34,27 @@ void AARogPowerup::ShowPowerup()
 
 void AARogPowerup::SetPowerupState(bool bNewIsActive)
 {
-	SetActorEnableCollision(bNewIsActive);
+	bIsActive = bNewIsActive;
+	OnRep_IsActive();
+}
+
+void AARogPowerup::OnRep_IsActive()
+{
+	SetActorEnableCollision(bIsActive);
 	// Set visibility on root and all children
-	RootComponent->SetVisibility(bNewIsActive, true);
+	RootComponent->SetVisibility(bIsActive, true);
 }
 
 void AARogPowerup::HideAndCooldownPowerup()
 {
 	SetPowerupState(false);
 
-	FTimerHandle TimerHandle_RespawnTimer;
 	GetWorldTimerManager().SetTimer(TimerHandle_RespawnTimer, this, &AARogPowerup::ShowPowerup, RespawnTime);
+}
+
+void AARogPowerup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AARogPowerup, bIsActive);
 }

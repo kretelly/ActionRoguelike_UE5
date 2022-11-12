@@ -69,13 +69,12 @@ void AARogGameModeBase::StartPlay()
 // This function it is very helpful when it comes to multiplayer
 void AARogGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
 {
-	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
-
 	AARogPlayerState* PS = NewPlayer->GetPlayerState<AARogPlayerState>();
 	if (PS)
 	{
 		PS->LoadPlayerState(CurrentSaveGame);
 	}
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 }
 
 void AARogGameModeBase::KillAll()

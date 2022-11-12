@@ -8,6 +8,7 @@
 #include "ARogPowerup.generated.h"
 
 class USphereComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API AARogPowerup : public AActor, public IARogGameplayInterface
@@ -15,6 +16,12 @@ class ACTIONROGUELIKE_API AARogPowerup : public AActor, public IARogGameplayInte
 	GENERATED_BODY()
 
 protected:
+
+	UPROPERTY(ReplicatedUsing = "OnRep_IsActive")
+	bool bIsActive;
+
+	UFUNCTION()
+	void OnRep_IsActive();
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USphereComponent* SphereComp;
@@ -24,6 +31,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Powerup")
 	float RespawnTime;
+
+	FTimerHandle TimerHandle_RespawnTimer;
 
 	UFUNCTION()
 	void ShowPowerup();
