@@ -32,6 +32,15 @@ void UARogActionObject::StartAction_Implementation(AActor* Instigator)
 
 	RepData.bIsRunning = true;
 	RepData.Instigator = Instigator;
+
+	// UI
+	if (GetOwningComponent()->GetOwnerRole() == ROLE_Authority) // This condition is the same as HasAutority()
+	{
+		TimeStarted = GetWorld()->TimeSeconds;
+	}
+	
+	// UI
+	GetOwningComponent()->OnActionStarted.Broadcast(GetOwningComponent(), this);
 }
 
 void UARogActionObject::StopAction_Implementation(AActor* Instigator)
@@ -46,6 +55,9 @@ void UARogActionObject::StopAction_Implementation(AActor* Instigator)
 
 	RepData.bIsRunning = false;
 	RepData.Instigator = Instigator;
+
+	// UI
+	GetOwningComponent()->OnActionStopped.Broadcast(GetOwningComponent(), this);
 }
 
 UWorld* UARogActionObject::GetWorld() const
@@ -87,4 +99,5 @@ void UARogActionObject::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UARogActionObject, RepData);
+	DOREPLIFETIME(UARogActionObject, TimeStarted);
 }

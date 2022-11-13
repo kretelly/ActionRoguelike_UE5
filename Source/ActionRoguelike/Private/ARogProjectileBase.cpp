@@ -78,7 +78,7 @@ void AARogProjectileBase::OnComponentHit(UPrimitiveComponent* HitComponent, AAct
 		{
 			if (Cast<AARogTargetDummy>(OtherActor))
 			{
-				UARogGameplayFunctionLibrary::ApplyDamage(this, OtherActor, 20.0f);
+				UARogGameplayFunctionLibrary::ApplyDamage(this, OtherActor, 25.0f);
 			}
 
 			Explode();

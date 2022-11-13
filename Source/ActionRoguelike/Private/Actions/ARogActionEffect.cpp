@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Actions/ARogActionEffect.h"
 #include "Components/ARogActionComponent.h"
+#include "GameFramework/GameStateBase.h"
 
 UARogActionEffect::UARogActionEffect()
 {
@@ -56,5 +56,11 @@ void UARogActionEffect::ExecutePeriodicEffect_Implementation(AActor* Instigator)
 
 float UARogActionEffect::GetTimeRemaining() const
 {
-	return 0.0f;
+	AGameStateBase* GS = GetWorld()->GetGameState<AGameStateBase>();
+	if (GS)
+	{
+		float EndTime = TimeStarted + Duration;
+		return EndTime - GS->GetServerWorldTimeSeconds();
+	}
+	return Duration;
 }

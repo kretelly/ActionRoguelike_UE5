@@ -164,6 +164,9 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 
 ## Lecture 24
 - [Widget Type Reference](https://docs.unrealengine.com/5.0/en-US/widget-type-reference-for-umg-ui-designer-in-unreal-engine/)
-- [UMG Styling](https://docs.unrealengine.com/5.0/en-US/umg-styling-in-unreal-engine/)
 - [UMG Best Practices](https://docs.unrealengine.com/5.0/en-US/umg-best-practices-in-unreal-engine/)
 - [Text Formatting and Fonts](https://docs.unrealengine.com/5.0/en-US/text-formatting-and-fonts-in-umg-for-unreal-engine/)
+
+## Lecture 25
+- [UMG Styling](https://docs.unrealengine.com/5.0/en-US/umg-styling-in-unreal-engine/)
+- [Unreal Engine Documentation Index](https://docs.unrealengine.com/5.0/en-US/unreal-engine-documentation-index/?tags=UMG%20UI%20Designer)

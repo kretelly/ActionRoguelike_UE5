@@ -9,6 +9,8 @@
 
 class UARogActionObject;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActionStateChanged, UARogActionComponent*, OwningComp, UARogActionObject*, Action);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API UARogActionComponent : public UActorComponent
 {
@@ -48,12 +50,20 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Actions")
 	TArray<TSubclassOf<UARogActionObject>> DefaultActions; // Array of actions that player can play.
 
-	UPROPERTY(Replicated)
+	UPROPERTY(BlueprintReadOnly, Replicated)
 	TArray<UARogActionObject*> Actions; //TODO: Improve to TMap in the future
 
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
+	// UI
+	UPROPERTY(BlueprintAssignable)
+	FOnActionStateChanged OnActionStarted;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnActionStateChanged OnActionStopped;
+
 	// This function allow ActorComponent replicate UObjects, it's useful to replicate array and so on.
 	bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 

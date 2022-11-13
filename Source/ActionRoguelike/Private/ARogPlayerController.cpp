@@ -37,6 +37,7 @@ void AARogPlayerController::TogglePauseMenu()
 		// Single-player only
 		if (GetWorld()->IsNetMode(NM_Standalone))
 		{
+			// To replicate this pause game we have to handle also buff effects and other stuffs that are consumible by time (e.g. potion effetcs)
 			UGameplayStatics::SetGamePaused(this, false);
 		}
 		return;

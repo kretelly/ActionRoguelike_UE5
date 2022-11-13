@@ -49,6 +49,10 @@ protected:
 	UPROPERTY(ReplicatedUsing = "OnRep_RepData")
 	FActionRepData RepData;
 
+	// UI -> Used in the UI to control the remain time of some effect
+	UPROPERTY(Replicated)
+	float TimeStarted;
+
 	UFUNCTION()
 	void OnRep_RepData();
 
