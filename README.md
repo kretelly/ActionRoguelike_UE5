@@ -170,3 +170,8 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 ## Lecture 25
 - [UMG Styling](https://docs.unrealengine.com/5.0/en-US/umg-styling-in-unreal-engine/)
 - [Unreal Engine Documentation Index](https://docs.unrealengine.com/5.0/en-US/unreal-engine-documentation-index/?tags=UMG%20UI%20Designer)
+
+## Lecture 26
+- [Animation Blueprints](https://docs.unrealengine.com/5.0/en-US/animation-blueprints-in-unreal-engine/)
+- [Text Localization](https://docs.unrealengine.com/5.0/en-US/text-localization-in-unreal-engine/)
+

@@ -29,4 +29,8 @@ public:
 	/* Called after the Actor state was restored from a SaveGame file. */
 	UFUNCTION(BlueprintNativeEvent)
 	void OnActorLoaded();
+
+	// Get the correct value of a localized widget text
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	FText GetInteractText(APawn* InstigatorPawn);
 };
