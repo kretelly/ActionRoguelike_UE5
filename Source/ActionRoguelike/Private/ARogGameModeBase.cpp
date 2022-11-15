@@ -16,6 +16,7 @@
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 #include "Engine/AssetManager.h"
 #include "Data/ARogMonsterDataAsset.h"
+#include "Components/ARogActionComponent.h"
 
 // Creating our console variable to control the spawn bot
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ARog.SpawnBots"), true, TEXT("Toggle spawn bots rate!"), EConsoleVariableFlags::ECVF_Cheat);
@@ -161,9 +162,21 @@ void AARogGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapp
 			FMonsterInfoRow* SelectedRow = Rows[RandomIndex];
 
 			// I could just use the DataTable without the DataAsset and just calling our 'TSubclassOf<AActor>' SelectedRow->MonsterClass
-			GetWorld()->SpawnActor<AActor>(SelectedRow->MonsterData->MonsterClass, Locations[0], FRotator::ZeroRotator, SpawnParams);
-		}
+			AActor* Actor = GetWorld()->SpawnActor<AActor>(SelectedRow->MonsterData->MonsterClass, Locations[0], FRotator::ZeroRotator, SpawnParams);
 
+			if (Actor)
+			{
+				UARogActionComponent* ActionComp = Cast<UARogActionComponent>(Actor->FindComponentByClass<UARogActionComponent>());
+				if (ActionComp)
+				{
+					// Grants actions, buffs, and so on during spawn.
+					for (TSubclassOf<UARogActionObject> ActionClass : SelectedRow->MonsterData->Actions)
+					{
+						ActionComp->AddAction(Actor, ActionClass);
+					}
+				}
+			}
+		}
 		// Track all the used spawn locations
 		//DrawDebugSphere(GetWorld(), Locations[0], 50.0f, 20, FColor::Blue, false, 60.0f);
 	}
@@ -345,6 +358,7 @@ void AARogGameModeBase::LoadSaveGame()
 					Archive.ArIsSaveGame = true; // Find only variables with UPROPERTY(SaveGame)
 					Actor->Serialize(Archive); // Convert binary array back into actor's variables
 
+					// Using this I can trigger some action for a specific Actor.
 					IARogGameplayInterface::Execute_OnActorLoaded(Actor);
 
 					break;

@@ -181,3 +181,5 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Asset Manager (UAssetManager)](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Engine/UAssetManager/)
 - [Asset Manager for Data Assets & Async Loading](https://www.tomlooman.com/asset-manager-ue4/)
 - [Data-driven Design in Unreal](https://benui.ca/unreal/data-driven-design/)
+- [Asynchronous Asset Loading](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/Assets/AsyncLoading/)
+- [FStreamableManager (C++ version of 'Async Load Asset')](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/Engine/FStreamableManager/)

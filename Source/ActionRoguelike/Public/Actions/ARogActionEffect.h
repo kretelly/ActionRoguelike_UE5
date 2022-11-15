@@ -7,13 +7,13 @@
 #include "ARogActionEffect.generated.h"
 
 /**
- * 
+ * TSoftObjectPtr<T> : Soft reference of content like UTexture2D, UParticleSystem, USoundCue and so on.
+ * TSoftClassPtr<T>  : Soft reference of TSubClassOf<T>
  */
 UCLASS()
 class ACTIONROGUELIKE_API UARogActionEffect : public UARogActionObject
 {
 	GENERATED_BODY()
-
 
 public:
 
@@ -24,7 +24,7 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
-	UTexture2D* Icon; // Effect Icon -> it could be included into ARogActionEffect
+	TSoftObjectPtr<UTexture2D> Icon;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effect")
 	float Duration;
