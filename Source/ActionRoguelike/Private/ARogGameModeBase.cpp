@@ -39,11 +39,11 @@ void AARogGameModeBase::InitGame(const FString& MapName, const FString& Options,
 	Super::InitGame(MapName, Options, ErrorMessage);
 
 	/**
-	* 
+	*
 	* The load transform will not property work in Actor with bIsSpatiallyLoaded setted as true
 	* because it may not be available when the InitGame() is called in level with World Partition enabled
 	* One way to handle that or work around is use the postload functions of our actor and implement some logic.
-	* 
+	*
 	* https://courses.tomlooman.com/courses/1320807/lectures/35211646/comments/16776540
 	*/
 	LoadSaveGame();
@@ -146,12 +146,6 @@ void AARogGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapp
 	TArray<FVector> Locations = QueryInstance->GetResultsAsLocations();
 	if (Locations.IsValidIndex(0))
 	{
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		//FVector SpawnLocation = Locations[0];
-		//SpawnLocation.Z += 120.f;
-
 		if (MonsterTable)
 		{
 			TArray<FMonsterInfoRow*> Rows;
@@ -161,24 +155,39 @@ void AARogGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapp
 			int32 RandomIndex = FMath::RandRange(0, Rows.Num() - 1);
 			FMonsterInfoRow* SelectedRow = Rows[RandomIndex];
 
-			// I could just use the DataTable without the DataAsset and just calling our 'TSubclassOf<AActor>' SelectedRow->MonsterClass
-			AActor* Actor = GetWorld()->SpawnActor<AActor>(SelectedRow->MonsterData->MonsterClass, Locations[0], FRotator::ZeroRotator, SpawnParams);
+			UAssetManager* Manager = UAssetManager::GetIfValid();
+			if (Manager)
+			{
+				TArray<FName> Bundles;
+				FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &AARogGameModeBase::OnMonsterLoaded, SelectedRow->MonsterId, Locations[0]);
+				Manager->LoadPrimaryAsset(SelectedRow->MonsterId, Bundles, Delegate);
+			}
+		}
+	}
+}
 
+void AARogGameModeBase::OnMonsterLoaded(FPrimaryAssetId LoadedId, FVector SpawnLocation)
+{
+	UAssetManager* Manager = UAssetManager::GetIfValid();
+	if (Manager)
+	{
+		UARogMonsterDataAsset* MonsterData = Cast<UARogMonsterDataAsset>(Manager->GetPrimaryAssetObject(LoadedId));
+		if (MonsterData)
+		{
+			AActor* Actor = GetWorld()->SpawnActor<AActor>(MonsterData->MonsterClass, SpawnLocation, FRotator::ZeroRotator);
 			if (Actor)
 			{
 				UARogActionComponent* ActionComp = Cast<UARogActionComponent>(Actor->FindComponentByClass<UARogActionComponent>());
 				if (ActionComp)
 				{
 					// Grants actions, buffs, and so on during spawn.
-					for (TSubclassOf<UARogActionObject> ActionClass : SelectedRow->MonsterData->Actions)
+					for (TSubclassOf<UARogActionObject> ActionClass : MonsterData->Actions)
 					{
 						ActionComp->AddAction(Actor, ActionClass);
 					}
 				}
 			}
 		}
-		// Track all the used spawn locations
-		//DrawDebugSphere(GetWorld(), Locations[0], 50.0f, 20, FColor::Blue, false, 60.0f);
 	}
 }
 
@@ -297,7 +306,7 @@ void AARogGameModeBase::WriteSaveGame()
 	for (FActorIterator It(GetWorld()); It; ++It)
 	{
 		AActor* Actor = *It;
-		
+
 		// Only interested in our 'gameplay actors'
 		if (!Actor->Implements<UARogGameplayInterface>())
 		{
@@ -351,7 +360,7 @@ void AARogGameModeBase::LoadSaveGame()
 				if (ActorData.ActorName == Actor->GetName())
 				{
 					Actor->SetActorTransform(ActorData.Transform);
-					
+
 					// Unserializing variables marked as UPROPERTY(SaveGame) down below
 					FMemoryReader MemReader(ActorData.ByteData); // Pass the array to get all stored data from Actor
 					FObjectAndNameAsStringProxyArchive Archive(MemReader, true);

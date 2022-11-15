@@ -31,7 +31,7 @@ public:
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UARogMonsterDataAsset* MonsterData;
+	FPrimaryAssetId MonsterId;
 	//TSubclassOf<AActor> MonsterClass;
 
 	/* Relative chance to pick this monster */
@@ -45,6 +45,7 @@ public:
 	/* Amount of credits awarded to killer of this unit.  */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float KillReward;
+
 };
 
 /**
@@ -105,6 +106,8 @@ protected:
 
 	UFUNCTION()
 	void RespawnPlayerElapsed(AController* Controller);
+
+	void OnMonsterLoaded(FPrimaryAssetId LoadedId, FVector SpawnLocation);
 
 public:
 
