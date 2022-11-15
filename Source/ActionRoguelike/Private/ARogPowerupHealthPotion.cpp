@@ -37,6 +37,7 @@ void AARogPowerupHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 	}
 }
 
+
 FText AARogPowerupHealthPotion::GetInteractText_Implementation(APawn* InstigatorPawn)
 {
 	UARogAttributeComponent* AttributeComp = UARogAttributeComponent::GetAttributeComponent(InstigatorPawn);

@@ -175,3 +175,9 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Animation Blueprints](https://docs.unrealengine.com/5.0/en-US/animation-blueprints-in-unreal-engine/)
 - [Text Localization](https://docs.unrealengine.com/5.0/en-US/text-localization-in-unreal-engine/)
 
+## Lecture 27
+- ["Blueprints In-depth" (Memory & Loading @39:23)](https://www.youtube.com/watch?v=j6mskTgL7kU&t=2363s)
+- [Data Driven Gameplay Elements](https://docs.unrealengine.com/5.1/en-US/data-driven-gameplay-elements-in-unreal-engine/)
+- [Asset Manager (UAssetManager)](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Engine/UAssetManager/)
+- [Asset Manager for Data Assets & Async Loading](https://www.tomlooman.com/asset-manager-ue4/)
+- [Data-driven Design in Unreal](https://benui.ca/unreal/data-driven-design/)

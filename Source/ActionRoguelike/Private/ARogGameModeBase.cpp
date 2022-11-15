@@ -14,6 +14,8 @@
 #include "GameFramework/GameStateBase.h"
 #include "ARogGameplayInterface.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
+#include "Engine/AssetManager.h"
+#include "Data/ARogMonsterDataAsset.h"
 
 // Creating our console variable to control the spawn bot
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ARog.SpawnBots"), true, TEXT("Toggle spawn bots rate!"), EConsoleVariableFlags::ECVF_Cheat);
@@ -149,10 +151,21 @@ void AARogGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapp
 		//FVector SpawnLocation = Locations[0];
 		//SpawnLocation.Z += 120.f;
 
-		GetWorld()->SpawnActor<AActor>(MinionClass, Locations[0], FRotator::ZeroRotator, SpawnParams);
+		if (MonsterTable)
+		{
+			TArray<FMonsterInfoRow*> Rows;
+			MonsterTable->GetAllRows("", Rows);
+
+			// Get Random Enemy
+			int32 RandomIndex = FMath::RandRange(0, Rows.Num() - 1);
+			FMonsterInfoRow* SelectedRow = Rows[RandomIndex];
+
+			// I could just use the DataTable without the DataAsset and just calling our 'TSubclassOf<AActor>' SelectedRow->MonsterClass
+			GetWorld()->SpawnActor<AActor>(SelectedRow->MonsterData->MonsterClass, Locations[0], FRotator::ZeroRotator, SpawnParams);
+		}
 
 		// Track all the used spawn locations
-		DrawDebugSphere(GetWorld(), Locations[0], 50.0f, 20, FColor::Blue, false, 60.0f);
+		//DrawDebugSphere(GetWorld(), Locations[0], 50.0f, 20, FColor::Blue, false, 60.0f);
 	}
 }
 
