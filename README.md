@@ -204,3 +204,5 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Unreal Online Learning Portal | Learning Library](https://www.unrealengine.com/en-US/onlinelearning-courses)
 - [Programming Subsystems](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Subsystems/)
 - [Easily Add Custom 'Project Settings' to Unreal Engine (.INI)](https://www.tomlooman.com/unreal-engine-developer-settings/)
+- [Oodle Data Compression](https://www.unrealengine.com/en-US/blog/oodle-now-free-to-use-in-unreal-engine-via-github)
+- [Enhanced Input System](https://docs.unrealengine.com/4.26/en-US/InteractiveExperiences/Input/EnhancedInput/)

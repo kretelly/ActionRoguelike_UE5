@@ -6,7 +6,10 @@
 #include "GameFramework/PlayerState.h"
 #include "ARogPlayerState.generated.h"
 
+// Event Handler for Credits
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnCreditsChanged, AARogPlayerState*, PlayerState, int32, NewCredits, int32, Delta);
+// Event Handler for Personal Record Time
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnRecordTimeChanged, AARogPlayerState*, PlayerState, float, NewTime, float, OldRecord);
 
 class UARogSaveGame;
 
@@ -23,6 +26,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = "OnRep_Credits", Category = "Credits")
 	int32 Credits;
 
+	UPROPERTY(BlueprintReadOnly)
+	float PersonalRecordTime;
+
 	// OnRep_ can use a parameter containing the 'old value' of the variable it is bound to. Very useful in this case to figure out the 'delta'.
 	UFUNCTION()
 	void OnRep_Credits(int32 OldCredits);
@@ -32,6 +38,10 @@ protected:
 	//void MulticastCredits(float NewCredits, float Delta);
 
 public:
+
+	/* Checks current record and only sets if better time was passed in. */
+	UFUNCTION(BlueprintCallable)
+	bool UpdatePersonalRecord(float NewTime);
 
 	UFUNCTION(BlueprintCallable, Category = "Credits")
 	int32 GetCredits() const;
@@ -44,6 +54,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnCreditsChanged OnCreditsChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnRecordTimeChanged OnRecordTimeChanged;
 
 	UFUNCTION(BlueprintNativeEvent)
 	void SavePlayerState(UARogSaveGame* SaveObject);

@@ -17,6 +17,7 @@
 #include "Engine/AssetManager.h"
 #include "Data/ARogMonsterDataAsset.h"
 #include "Components/ARogActionComponent.h"
+#include "Subsystem/ARogSaveGameSubsystem.h"
 
 // Creating our console variable to control the spawn bot
 static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ARog.SpawnBots"), true, TEXT("Toggle spawn bots rate!"), EConsoleVariableFlags::ECVF_Cheat);
@@ -46,13 +47,12 @@ void AARogGameModeBase::InitGame(const FString& MapName, const FString& Options,
 	* https://courses.tomlooman.com/courses/1320807/lectures/35211646/comments/16776540
 	*/
 
-	FString SelectedSaveSlot = UGameplayStatics::ParseOption(Options, "SaveGame");
-	if (SelectedSaveSlot.Len() > 0)
-	{
-		SlotName = SelectedSaveSlot;
-	}
+	// (Save/Load logic moved into new SaveGameSubsystem)
+	UARogSaveGameSubsystem* SG = GetGameInstance()->GetSubsystem<UARogSaveGameSubsystem>();
 
-	LoadSaveGame();
+	// Optional slot name (Falls back to slot specified in SaveGameSettings class/INI otherwise)
+	FString SelectedSaveSlot = UGameplayStatics::ParseOption(Options, "SaveGame");
+	SG->LoadSaveGame(SelectedSaveSlot);
 }
 
 void AARogGameModeBase::StartPlay()
@@ -78,12 +78,16 @@ void AARogGameModeBase::StartPlay()
 // This function it is very helpful when it comes to multiplayer
 void AARogGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
 {
-	AARogPlayerState* PS = NewPlayer->GetPlayerState<AARogPlayerState>();
-	if (PS)
-	{
-		PS->LoadPlayerState(CurrentSaveGame);
-	}
+
+	// Calling Before Super:: so we set variables before 'beginplayingstate' is called in PlayerController (which is where we instantiate UI)
+	UARogSaveGameSubsystem* SG = GetGameInstance()->GetSubsystem<UARogSaveGameSubsystem>();
+	SG->HandleStartingNewPlayer(NewPlayer);
+
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+
+	// Now we're ready to override spawn location
+	// Alternatively we could override core spawn location to use store locations immediately (skipping the whole 'find player start' logic)
+	SG->OverrideSpawnTransform(NewPlayer);
 }
 
 void AARogGameModeBase::KillAll()
@@ -273,12 +277,15 @@ void AARogGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 	AARogCharacter* Player = Cast<AARogCharacter>(VictimActor);
 	if (Player)
 	{
-		FTimerHandle RespawnTimerHandle;
-		FTimerDelegate Delegate;
-		Delegate.BindUFunction(this, "RespawnPlayerElapsed", Player->GetController());
-
-		float RespawnDelay = 2.0f;
-		GetWorldTimerManager().SetTimer(RespawnTimerHandle, Delegate, RespawnDelay, false);
+		// Store time if it was better than previous record
+		AARogPlayerState* PS = Player->GetPlayerState<AARogPlayerState>();
+		if (PS)
+		{
+			PS->UpdatePersonalRecord(GetWorld()->TimeSeconds);
+		}
+		UARogSaveGameSubsystem* SG = GetGameInstance()->GetSubsystem<UARogSaveGameSubsystem>();
+		// Immediately auto save on death
+		SG->WriteSaveGame();
 	}
 
 	// Give Credits for kill (AI does not have Splayer State)
@@ -290,100 +297,5 @@ void AARogGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 		{
 			PS->AddCredits(CreditsPerKill);
 		}
-	}
-}
-
-void AARogGameModeBase::WriteSaveGame()
-{
-	// Iterate all player states, we don't have proper ID to match yet (requires Steam or EOS)
-	for (int32 i = 0; i < GameState->PlayerArray.Num(); i++)
-	{
-		AARogPlayerState* PS = Cast<AARogPlayerState>(GameState->PlayerArray[i]);
-		if (PS)
-		{
-			PS->SavePlayerState(CurrentSaveGame);
-			break; // single player only at this point
-		}
-	}
-
-	CurrentSaveGame->SavedActors.Empty();
-
-	// Iterate the entire world of actors
-	for (FActorIterator It(GetWorld()); It; ++It)
-	{
-		AActor* Actor = *It;
-
-		// Only interested in our 'gameplay actors'
-		if (!Actor->Implements<UARogGameplayInterface>())
-		{
-			continue;
-		}
-
-		FActorSaveData ActorData;
-		ActorData.ActorName = Actor->GetName();
-		ActorData.Transform = Actor->GetActorTransform();
-
-		// Serializing variables marked as UPROPERTY(SaveGame) down below
-		FMemoryWriter MemWriter(ActorData.ByteData); // Pass the array to fill with data from Actor
-		FObjectAndNameAsStringProxyArchive Archive(MemWriter, true);
-		Archive.ArIsSaveGame = true; // Find only variables with UPROPERTY(SaveGame)
-		Actor->Serialize(Archive); // Converts Actor's SaveGame UPROPERTIES into binary array
-
-		// Add the actor to the saved Actor's Array
-		CurrentSaveGame->SavedActors.Add(ActorData);
-	}
-
-	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
-
-}
-
-void AARogGameModeBase::LoadSaveGame()
-{
-	if (UGameplayStatics::DoesSaveGameExist(SlotName, 0))
-	{
-		CurrentSaveGame = Cast<UARogSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, 0));
-
-		if (CurrentSaveGame == nullptr)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Failed to load SaveGame Data."));
-			return;
-		}
-
-		UE_LOG(LogTemp, Log, TEXT("Loaded SaveGame Data."));
-
-		// Iterate the entire world of actors
-		for (FActorIterator It(GetWorld()); It; ++It)
-		{
-			AActor* Actor = *It;
-			// Only interested in our 'gameplay actors'
-			if (!Actor->Implements<UARogGameplayInterface>())
-			{
-				continue;
-			}
-
-			for (FActorSaveData ActorData : CurrentSaveGame->SavedActors)
-			{
-				if (ActorData.ActorName == Actor->GetName())
-				{
-					Actor->SetActorTransform(ActorData.Transform);
-
-					// Unserializing variables marked as UPROPERTY(SaveGame) down below
-					FMemoryReader MemReader(ActorData.ByteData); // Pass the array to get all stored data from Actor
-					FObjectAndNameAsStringProxyArchive Archive(MemReader, true);
-					Archive.ArIsSaveGame = true; // Find only variables with UPROPERTY(SaveGame)
-					Actor->Serialize(Archive); // Convert binary array back into actor's variables
-
-					// Using this I can trigger some action for a specific Actor.
-					IARogGameplayInterface::Execute_OnActorLoaded(Actor);
-
-					break;
-				}
-			}
-		}
-	}
-	else
-	{
-		CurrentSaveGame = Cast<UARogSaveGame>(UGameplayStatics::CreateSaveGameObject(UARogSaveGame::StaticClass()));
-		//UE_LOG(LogTemp, Log, TEXT("Created New SaveGame Data."));
 	}
 }

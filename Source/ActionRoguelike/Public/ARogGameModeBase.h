@@ -124,12 +124,6 @@ public:
 	UFUNCTION(Exec)
 	void KillAll();
 
-	// Save Game logic goes down below
-	UFUNCTION(BlueprintCallable, Category = "SaveGame")
-	void WriteSaveGame();
-
-	void LoadSaveGame();
-
 	FString SlotName;
 
 	UPROPERTY()
