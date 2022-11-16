@@ -46,7 +46,8 @@ AARogProjectileBase::AARogProjectileBase()
 	ImpactShakeOuterRadius = 1500.0f;
 
 	// Allow replicate when spawned during gameplay
-	SetReplicates(true);
+	bReplicates = true;
+	//SetReplicates(true);
 }
 
 // Called when the game starts or when spawned

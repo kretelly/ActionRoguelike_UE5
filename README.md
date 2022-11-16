@@ -50,6 +50,7 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Hot Reload and Live Coding](https://unrealcommunity.wiki/live-compiling-in-unreal-projects-tp14jcgs)
 - [Logs, Printing Messages To Yourself During Runtime](https://nerivec.github.io/old-ue4-wiki/pages/logs-printing-messages-to-yourself-during-runtime.html)
 - [Asserts for Debugging](https://docs.unrealengine.com/5.0/en-US/asserts-in-unreal-engine/)
+- [Logging](https://unrealcommunity.wiki/logging-lgpidy6i)
 
 ## Lecture 7
 - [String Handling](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/StringHandling/)
@@ -183,3 +184,15 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Data-driven Design in Unreal](https://benui.ca/unreal/data-driven-design/)
 - [Asynchronous Asset Loading](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/Assets/AsyncLoading/)
 - [FStreamableManager (C++ version of 'Async Load Asset')](https://docs.unrealengine.com/5.1/en-US/API/Runtime/Engine/Engine/FStreamableManager/)
+
+## Lecture 28
+- [Packaging Projects Docs](https://docs.unrealengine.com/5.1/en-US/packaging-unreal-engine-projects/)
+- [Profiling Stats in Unreal Engine (Adding Custom Stat Commands)](https://www.tomlooman.com/unreal-engine-profiling-stat-commands/)
+- [Overcoming Common Early Challenges](https://www.youtube.com/watch?v=2edoacF53F0)
+- [Blueprints In-depth (Two Parts)](https://www.youtube.com/watch?v=j6mskTgL7kU)
+- [Performance and Profiling](https://www.youtube.com/watch?v=hcxetY8g_fs)
+- [Collect, Analyze, and Visualize Your Data with Unreal Insights](https://www.youtube.com/watch?v=Rf6oNkcGmX4)
+- [Unreal Insights Docs](https://docs.unrealengine.com/en-US/Engine/Performance/UnrealInsights/index.html)
+- [Stat Commands Docs](https://docs.unrealengine.com/5.1/en-US/stat-commands-in-unreal-engine/)
+- [Stats System Overview](https://docs.unrealengine.com/5.1/en-US/unreal-engine-stats-system-overview/)
+- [Nativizing Blueprints](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Blueprints/TechnicalGuide/NativizingBlueprints/)

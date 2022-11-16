@@ -32,7 +32,8 @@ AARogItemChest::AARogItemChest()
 	bIsSpatiallyLoaded = false;
 	//SetIsSpatiallyLoaded(false);
 
-	SetReplicates(true); // Allow this actor replicate
+	bReplicates = true; // Allow this actor replicate
+	//SetReplicates(true);
 	SetReplicateMovement(true); // Save Game Replicates
 	BaseMesh->SetIsReplicated(true); // Save Game Replicates
 }

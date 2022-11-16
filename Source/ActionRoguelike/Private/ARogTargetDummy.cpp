@@ -17,7 +17,9 @@ AARogTargetDummy::AARogTargetDummy()
 	AttributeComp = CreateDefaultSubobject<UARogAttributeComponent>("AttributeComp");
 	AttributeComp->ParamChangeDelegate.AddDynamic(this, &AARogTargetDummy::OnParamChange);
 
-	SetReplicates(true); // Allow this actor replicate
+	// Allow this actor replicate
+	bReplicates = true;
+	//SetReplicates(true);
 }
 
 void AARogTargetDummy::OnParamChange(AActor* InstigatorActor, UARogAttributeComponent* OwningComp, float NewHealth, float Delta)

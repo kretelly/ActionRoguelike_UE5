@@ -19,7 +19,8 @@ AARogPowerup::AARogPowerup()
 	RespawnTime = 10.0f;
 
 	// Allow replicate when spawned during gameplay
-	SetReplicates(true); 
+	bReplicates = true;
+	//SetReplicates(true); 
 }
 
 void AARogPowerup::Interact_Implementation(APawn* InstigatorPawn)

@@ -7,7 +7,7 @@
 void AARogPlayerState::AddCredits(int32 Delta)
 {
 	// Avoid user-error of adding a negative amount or zero
-	if (!ensure(Delta > 0.0f))
+	if (!(Delta > 0.0f))
 	{
 		return;
 	}

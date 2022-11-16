@@ -7,6 +7,10 @@
 #include "Net/UnrealNetwork.h"
 #include "Engine/ActorChannel.h"
 
+// Declaring my own custom 'stat' command, DECLARE_CYCLE_STAT(CounterName,StatId,GroupId) 
+DECLARE_CYCLE_STAT(TEXT("StartActionByName"), STAT_StartActionByName, STATGROUP_ACTIONROGUELIKE); // Using my custom stat group -> my custom group is defined in 'ActionRoguelike.h' 
+//DECLARE_CYCLE_STAT(TEXT("StartActionByName"), STAT_StartActionByName, STATGROUP_StatSystem); // Using Default group
+
 // Sets default values for this component's properties
 UARogActionComponent::UARogActionComponent()
 {
@@ -27,6 +31,21 @@ void UARogActionComponent::BeginPlay()
 		for (TSubclassOf<UARogActionObject> ActionClass : DefaultActions)
 		{
 			AddAction(GetOwner(), ActionClass);
+		}
+	}
+}
+
+void UARogActionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	// Stop all
+	TArray<UARogActionObject*> ActionsCopy = Actions;
+	for (UARogActionObject* Action : ActionsCopy)
+	{
+		if (Action && Action->IsRunning())
+		{
+			Action->StopAction(GetOwner());
 		}
 	}
 }
@@ -83,6 +102,9 @@ void UARogActionComponent::RemoveAction(UARogActionObject* ActionToRemove)
 
 bool UARogActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 {
+	// Defining a scope for our Custom Command
+	SCOPE_CYCLE_COUNTER(STAT_StartActionByName);
+
 	for (UARogActionObject* Action : Actions)
 	{
 		if (Action && Action->ActionName == ActionName)
@@ -97,6 +119,16 @@ bool UARogActionComponent::StartActionByName(AActor* Instigator, FName ActionNam
 			{
 				ServerStartAction(Instigator, ActionName);
 			}
+
+			/* Using curly brackets we define an environment where our custom command should track
+			{
+				SCOPE_CYCLE_COUNTER(STAT_StartActionByName);
+				Action->StartAction(Instigator);
+			}
+			*/
+
+			// Bookmark for Unreal Insights
+			TRACE_BOOKMARK(TEXT("StartAction::%s"), *GetNameSafe(Action));
 
 			Action->StartAction(Instigator);
 			return true;

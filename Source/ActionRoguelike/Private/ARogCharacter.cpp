@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ARogActionComponent.h"
+#include "../ActionRoguelike.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -187,6 +188,8 @@ void AARogCharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCompo
 void AARogCharacter::HealtSelf(float Amount /* = 100.0f */)
 {
 	AttributeComp->ApplyHealthChange(this, Amount);
+	
+	UE_LOG(LogTemp, Warning, TEXT("The %s's healt itself in %f"), *this->GetName(), Amount);
 }
 
 FVector AARogCharacter::GetPawnViewLocation() const
@@ -195,3 +198,4 @@ FVector AARogCharacter::GetPawnViewLocation() const
 }
 
 //GEngine->AddOnScreenDebugMessage(-1, 4.5f, FColor::Purple, "Event Fired");
+//UE_LOG(LogTemp, Warning, TEXT("The %s's healt itself in %f"), *this->GetName(), Amount);
