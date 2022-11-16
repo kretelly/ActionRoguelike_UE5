@@ -17,7 +17,6 @@
 
 #include "DrawDebugHelpers.h"
 
-
 // Sets default values
 AARogAICharacter::AARogAICharacter()
 {
@@ -28,7 +27,7 @@ AARogAICharacter::AARogAICharacter()
     ActionComp = CreateDefaultSubobject<UARogActionComponent>(TEXT("ActionComp"));
 
     //Set collsion
-    GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore); //TODO: Create custom collision to handle this.
+    //GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore); //TODO: Create custom collision to handle this.
     GetMesh()->SetGenerateOverlapEvents(true);
 
     // Set the AI Controller to possess it when placed or spawned into the world
@@ -85,7 +84,7 @@ void AARogAICharacter::OnHealthChange(AActor* InstigatorActor, UARogAttributeCom
             
             GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             GetCharacterMovement()->DisableMovement();
-
+            
             // Set Life Span
             SetLifeSpan(7.0f);
         }

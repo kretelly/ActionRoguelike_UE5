@@ -35,6 +35,8 @@ AARogCharacter::AARogCharacter()
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
+
+	GetMesh()->SetGenerateOverlapEvents(true);
 }
 
 void AARogCharacter::PostInitializeComponents()

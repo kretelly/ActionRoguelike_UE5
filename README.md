@@ -196,3 +196,11 @@ Game Assets: Licensed for use with the Unreal Engine only. Without a custom lice
 - [Stat Commands Docs](https://docs.unrealengine.com/5.1/en-US/stat-commands-in-unreal-engine/)
 - [Stats System Overview](https://docs.unrealengine.com/5.1/en-US/unreal-engine-stats-system-overview/)
 - [Nativizing Blueprints](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Blueprints/TechnicalGuide/NativizingBlueprints/)
+
+## Lecture 29
+- [Generic Graph Plugin](https://github.com/jinyuliao/GenericGraph)
+- [FRuntimeFloatCurve](https://docs.unrealengine.com/5.0/en-US/API/Runtime/Engine/Curves/FRuntimeFloatCurve/)
+- [Developing a C++ Gameplay Framework with Tom Looman | Inside Unreal](https://www.youtube.com/watch?v=YKhcN8NkIYY)
+- [Unreal Online Learning Portal | Learning Library](https://www.unrealengine.com/en-US/onlinelearning-courses)
+- [Programming Subsystems](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Subsystems/)
+- [Easily Add Custom 'Project Settings' to Unreal Engine (.INI)](https://www.tomlooman.com/unreal-engine-developer-settings/)

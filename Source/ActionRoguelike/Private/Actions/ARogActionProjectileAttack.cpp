@@ -57,7 +57,7 @@ void UARogActionProjectileAttack::AttackTimerElapsed(ACharacter* InstigatorChara
 		FCollisionQueryParams QueryParams;
 		QueryParams.AddIgnoredActor(InstigatorCharacter);
 
-		/** Line Trace	
+		// Line Trace	
 		// Get Camera Component
 		UCameraComponent* CameraComp = InstigatorCharacter->FindComponentByClass<UCameraComponent>();
 
@@ -72,8 +72,8 @@ void UARogActionProjectileAttack::AttackTimerElapsed(ACharacter* InstigatorChara
 
 		// CVar
 		if (ICVar->GetBool()) DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 32.0f, 32, FColor::Green, false, 2.0f, 0, 1.f);
-		*/		
-
+			
+		/**
 		// Sweep Trace
 		FCollisionShape Shape;
 		Shape.SetSphere(15.0f);
@@ -92,7 +92,11 @@ void UARogActionProjectileAttack::AttackTimerElapsed(ACharacter* InstigatorChara
 			// CVar
 			if (ICVar->GetBool()) DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 32.0f, 32, FColor::Green, false, 2.0f, 0, 1.f);
 		}
+		
+		// find new direction/rotation from Hand pointing to impact point in world.
 		FRotator Rotation = FRotationMatrix::MakeFromX(TraceEnd - HandLocation).Rotator();
+		//FRotator Rotation = (TraceEnd - HandLocation).Rotation();
+		*/
 
 		// Tranform Spawn
 		FTransform SpawnTM = FTransform(Rotation, HandLocation);

@@ -82,6 +82,15 @@ void AARogProjectileBase::OnComponentHit(UPrimitiveComponent* HitComponent, AAct
 				UARogGameplayFunctionLibrary::ApplyDamage(this, OtherActor, 25.0f);
 			}
 
+			// Apply Direcional Damage if actor simulate Physics
+			if (OtherComp->IsSimulatingPhysics())
+			{
+				// Direction = Target - Origin
+				FVector Direction = Hit.TraceEnd - Hit.TraceStart;
+				Direction.Normalize();
+				OtherComp->AddImpulseAtLocation(Direction * 100000.f, Hit.ImpactPoint);
+			}
+
 			Explode();
 		}
 	}

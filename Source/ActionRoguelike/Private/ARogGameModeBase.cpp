@@ -31,21 +31,27 @@ AARogGameModeBase::AARogGameModeBase()
 
 	PlayerStateClass = AARogPlayerState::StaticClass();
 
-	SlotName = "SaveGame01";
+	SlotName = "DefaultSaveGame";
 }
 
 void AARogGameModeBase::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
-	/**
-	*
+	/** NOTE:
 	* The load transform will not property work in Actor with bIsSpatiallyLoaded setted as true
-	* because it may not be available when the InitGame() is called in level with World Partition enabled
+	* because it may not be available when the InitGame() is called in level with 'World Partition' enabled
 	* One way to handle that or work around is use the postload functions of our actor and implement some logic.
 	*
 	* https://courses.tomlooman.com/courses/1320807/lectures/35211646/comments/16776540
 	*/
+
+	FString SelectedSaveSlot = UGameplayStatics::ParseOption(Options, "SaveGame");
+	if (SelectedSaveSlot.Len() > 0)
+	{
+		SlotName = SelectedSaveSlot;
+	}
+
 	LoadSaveGame();
 }
 

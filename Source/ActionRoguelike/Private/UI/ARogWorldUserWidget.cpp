@@ -54,4 +54,15 @@ void UARogWorldUserWidget::NativeTick(const FGeometry& MyGeometry, float InDelta
 		}
 	}
 
+	// If fail project to screen, this hide the widget, very useful whe the other actor is not in our field vision
+	if (ParentSizeBox)
+	{
+		ParentSizeBox->SetVisibility(bProjectionSucceed ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+	}
+
+	/** NOTE:
+	* 
+	* If we hide the whole widget using SetVibility, and not only a child of it, the tick will stop and only get called again when it is setted to True again.
+	*
+	*/
 }

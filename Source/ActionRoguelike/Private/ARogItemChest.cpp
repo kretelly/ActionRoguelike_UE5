@@ -34,8 +34,8 @@ AARogItemChest::AARogItemChest()
 
 	bReplicates = true; // Allow this actor replicate
 	//SetReplicates(true);
-	SetReplicateMovement(true); // Save Game Replicates
-	BaseMesh->SetIsReplicated(true); // Save Game Replicates
+	SetReplicateMovement(true); // Allow Replicates Movement
+	BaseMesh->SetIsReplicated(true); // Apply replications to child
 }
 
 // Called when the game starts or when spawned

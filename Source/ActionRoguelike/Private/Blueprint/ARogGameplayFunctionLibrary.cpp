@@ -30,7 +30,7 @@ bool UARogGameplayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, 
 			FVector Direction = HitResult.TraceEnd - HitResult.TraceStart;
 			Direction.Normalize();
 
-			PrimitiveComp->AddImpulseAtLocation(Direction * 300000.f, HitResult.ImpactPoint, HitResult.BoneName);
+			PrimitiveComp->AddImpulseAtLocation(Direction * 30000.f, HitResult.ImpactPoint, HitResult.BoneName);
 		}
 		return false; // Already dead
 	}
