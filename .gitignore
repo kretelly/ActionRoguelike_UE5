@@ -77,3 +77,6 @@ DerivedDataCache/*
 Content/__ExternalActors__/
 Content/__ExternalObjects__/
 
+# More UE-5 files
+.vsconfig
+.htm

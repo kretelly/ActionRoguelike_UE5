@@ -165,7 +165,7 @@ void AARogGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapp
 			int32 RandomIndex = FMath::RandRange(0, Rows.Num() - 1);
 			FMonsterInfoRow* SelectedRow = Rows[RandomIndex];
 
-			UAssetManager* Manager = UAssetManager::GetIfValid();
+			UAssetManager* Manager = UAssetManager::GetIfInitialized();
 			if (Manager)
 			{
 				TArray<FName> Bundles;
@@ -178,7 +178,7 @@ void AARogGameModeBase::OnBotSpawnQueryCompleted(UEnvQueryInstanceBlueprintWrapp
 
 void AARogGameModeBase::OnMonsterLoaded(FPrimaryAssetId LoadedId, FVector SpawnLocation)
 {
-	UAssetManager* Manager = UAssetManager::GetIfValid();
+	UAssetManager* Manager = UAssetManager::GetIfInitialized();
 	if (Manager)
 	{
 		UARogMonsterDataAsset* MonsterData = Cast<UARogMonsterDataAsset>(Manager->GetPrimaryAssetObject(LoadedId));
